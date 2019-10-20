@@ -5,4 +5,5 @@ spring:
     password: mysqluser
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    url:
+    host: 127.0.0.1
+    port: 7001
