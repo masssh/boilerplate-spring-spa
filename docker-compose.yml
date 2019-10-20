@@ -9,19 +9,31 @@ services:
       MYSQL_USER: mysqluser
       MYSQL_PASSWORD: mysqluser
     ports:
-      - "3306:3306"
+      - 3306:3306
 
   redis:
     image: "redis:latest"
     ports:
-      - "7001:6379"
+      - 7001:6379
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9222:9090
+    logging:
+      driver: none
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 9333:3000
+    user: "472"
+    logging:
+      driver: none
 
   nexus:
     image: sonatype/nexus:oss
-    volumes:
-      - "nexus-data:/sonatype-work"
     ports:
-      - "8081:8081"
-
-volumes:
-  nexus-data: {}
+      - 8081:8081
+    logging:
+      driver: none
