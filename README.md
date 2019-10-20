@@ -1,1 +1,1 @@
-# boilerplate-spring-cli
+# boilerplate-spring-web

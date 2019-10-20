@@ -23,7 +23,13 @@ configurations {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+	implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -31,7 +37,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.4.1"
+	testImplementation 'org.springframework.security:spring-security-test'
     testImplementation "org.jacoco:org.jacoco.build:0.8.3"
 }
 
