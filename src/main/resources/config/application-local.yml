@@ -1,0 +1,36 @@
+config:
+  mysql:
+    url: jdbc:mysql://localhost:3306/local
+    username: mysqluser
+    password: mysqluser
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    pool-name: master
+    minimum-idle: 15
+    maximum-pool-size: 15
+    leak-detection-threshold: 0 # disabled
+  redis:
+    host: 127.0.0.1
+    port: 7001
+
+management:
+  endpoints:
+    web.exposure.include: '*'
+  endpoint:
+    health.show-details: ALWAYS
+  spring.boot.admin.client:
+    url: http://localhost:8090/
+    username: adminuser
+    password: adminuser
+    instance:
+      name: boilerplate-spring-web
+      service-base-url: http://host.docker.internal:8080/
+      prefer-ip: false
+      metadata:
+        user:
+          name: adminuser
+          password: adminuser
+
+spring:
+  security.user:
+    name: securityuser
+    password: securityuser
