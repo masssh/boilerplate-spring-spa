@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/local
+    username: mysqluser
+    password: mysqluser
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    url:
