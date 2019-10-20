@@ -1,6 +1,6 @@
 config:
   mysql:
-    url: jdbc:mysql://localhost:3306/local
+    jdbc-url: jdbc:mysql://localhost:3306/local
     username: mysqluser
     password: mysqluser
     driver-class-name: com.mysql.cj.jdbc.Driver

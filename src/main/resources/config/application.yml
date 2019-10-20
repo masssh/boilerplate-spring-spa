@@ -2,6 +2,7 @@ server:
   port: 8080
   error.whitelabel.enabled: false
 spring:
+  profiles.active: local
   mvc:
     static-path-pattern: /static/**
   thymeleaf:
