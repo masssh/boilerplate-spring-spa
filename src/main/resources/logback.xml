@@ -28,7 +28,6 @@
     <springProfile name="local">
         <include resource="logback/appender/logback-file.xml"/>
         <root level="INFO">
-            <appender-ref ref="APPLICATION_LOG_FILE"/>
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
