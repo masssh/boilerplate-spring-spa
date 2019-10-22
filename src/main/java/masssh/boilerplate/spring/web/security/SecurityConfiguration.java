@@ -15,7 +15,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/static/**/*.html", "/static/**/*.htm").denyAll()
-                .antMatchers("/", "/login", "/static/**", "/actuator/**").permitAll()
+                .antMatchers("/*", "/login", "/static/**", "/actuator/**").permitAll()
                 .anyRequest().authenticated();
         http.formLogin()
                 .loginPage("/")

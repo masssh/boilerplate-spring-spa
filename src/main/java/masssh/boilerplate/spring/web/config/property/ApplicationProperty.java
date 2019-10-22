@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationProperty {
     private MysqlProperty mysql;
     private RedisProperty redis;
+    private ElasticsearchProperty elasticsearch;
 
     @Data
     public static class MysqlProperty {
@@ -27,4 +28,12 @@ public class ApplicationProperty {
         String host;
         int port;
     }
+
+    @Data
+    public static class ElasticsearchProperty {
+        String host;
+        int port;
+        String clusterName;
+    }
+
 }

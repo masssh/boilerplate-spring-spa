@@ -1,24 +1,29 @@
 package masssh.boilerplate.spring.web.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.web.config.property.ApplicationProperty;
 import masssh.boilerplate.spring.web.config.property.ApplicationProperty.MysqlProperty;
-import masssh.boilerplate.spring.web.config.property.ApplicationProperty.RedisProperty;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import javax.sql.DataSource;
+import java.io.IOException;
 
-@MapperScan(basePackages = "masssh.boilerplate.spring.web")
+@MapperScan(basePackages = "masssh.boilerplate.spring.web.dao")
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfiguration {
+    private final ApplicationProperty applicationProperty;
+
     @Bean
-    public DataSource dataSource(final ApplicationProperty applicationProperty) {
+    public DataSource dataSource() {
         final MysqlProperty dataSourceProperty = applicationProperty.getMysql();
         final HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(dataSourceProperty.getJdbcUrl());
@@ -32,20 +37,13 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public LettuceConnectionFactory lettuceConnectionFactory(final ApplicationProperty applicationProperty) {
-        final RedisProperty redisProperty = applicationProperty.getRedis();
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(
-                redisProperty.getHost(),
-                redisProperty.getPort()
-        ));
-    }
-
-    @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean(final DataSource dataSource) {
+    public SqlSessionFactoryBean sqlSessionFactoryBean(final DataSource dataSource) throws IOException {
+        final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader());
         final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setTypeHandlersPackage("masssh.boilerplate.spring.web.dao.typehandler");
-        sqlSessionFactoryBean.setTypeAliasesPackage("masssh.boilerplate.spring.web.row");
+        sqlSessionFactoryBean.setTypeAliasesPackage("masssh.boilerplate.spring.web.model.row");
+        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
         final org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setUseGeneratedKeys(true);
         configuration.setAutoMappingBehavior(AutoMappingBehavior.FULL);
