@@ -13,9 +13,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 import java.io.IOException;
 
+@SuppressWarnings("WeakerAccess")
 @MapperScan(basePackages = "masssh.boilerplate.spring.web.dao")
 @Configuration
 @RequiredArgsConstructor
@@ -52,5 +54,10 @@ public class ApplicationConfiguration {
         configuration.setMapUnderscoreToCamelCase(true);
         sqlSessionFactoryBean.setConfiguration(configuration);
         return sqlSessionFactoryBean;
+    }
+
+    @Bean
+    public DataSourceTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 }
