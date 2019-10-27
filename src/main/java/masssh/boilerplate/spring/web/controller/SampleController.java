@@ -28,6 +28,9 @@ public class SampleController {
     private final RedisTemplate<String, Integer> redisTemplate;
     private final FooRepository fooRepository;
 
+    /**
+     * This method explains how to get data from various data source and return response.
+     */
     @GetMapping("/sample1")
     public ResponseEntity<SuccessResponse> sample1() {
         // mysql dao access
@@ -47,6 +50,10 @@ public class SampleController {
         return ResponseEntity.ok(new SuccessResponse());
     }
 
+    /**
+     * This method explains how POST request is validated and exception should be handled.
+     * See also {@link masssh.boilerplate.spring.web.advice.ApplicationExceptionHandler}.
+     */
     @PostMapping("/sample2")
     public ResponseEntity<SuccessResponse> sample2(
             @Valid SampleRequest request,
@@ -59,7 +66,7 @@ public class SampleController {
 
     @SuppressWarnings("ConstantConditions")
     @GetMapping("/sample3")
-    public String sample3() {
+    public ResponseEntity<SuccessResponse> sample3() {
         final boolean flag = true;
         try {
             if (flag) {
@@ -68,6 +75,20 @@ public class SampleController {
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Custom Message Here");
         }
-        return "{}";
+        return ResponseEntity.ok(new SuccessResponse());
+    }
+
+    /**
+     * This method is used to see the spring security authorization.
+     * To see how authorization works, execute below commands
+     * <p>
+     * # login and store cookie
+     * curl -X POST http://localhost:8080/login -d username=user -d password=user -c /tmp/cookie.txt
+     * # send request to api endpoint with authorized cookie
+     * curl http://localhost:8080/sample4 -b /tmp/cookie.txt
+     */
+    @GetMapping("/api/sample4")
+    public ResponseEntity<SuccessResponse> sample4() {
+        return ResponseEntity.ok(new SuccessResponse());
     }
 }
