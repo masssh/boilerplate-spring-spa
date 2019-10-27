@@ -1,6 +1,7 @@
 package masssh.boilerplate.spring.web.model.response;
 
-abstract class BaseResponse {
+@SuppressWarnings("WeakerAccess")
+abstract public class BaseResponse {
     int status;
     String message;
 }

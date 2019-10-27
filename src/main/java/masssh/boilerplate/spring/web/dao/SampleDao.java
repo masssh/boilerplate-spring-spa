@@ -7,6 +7,6 @@ import java.util.Optional;
 
 @Mapper
 public interface SampleDao {
-    @Select("SELECT * FROM sample WHERE #{id}")
+    @Select("SELECT * FROM sample WHERE id = #{id}")
     Optional<SampleRow> singleSample(final int id);
 }
