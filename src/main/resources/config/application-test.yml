@@ -20,7 +20,7 @@ config:
   oauth2-google:
     client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
     client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
-    scope: openid,email,profile
+    scope: openid,email
 
 management:
   endpoints:

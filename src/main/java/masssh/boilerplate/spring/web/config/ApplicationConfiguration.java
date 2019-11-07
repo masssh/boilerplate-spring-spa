@@ -9,19 +9,19 @@ import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.sql.DataSource;
 import java.io.IOException;
 
 @SuppressWarnings("WeakerAccess")
-@MapperScan(basePackages = "masssh.boilerplate.spring.web.dao")
 @Configuration
+@ComponentScan("masssh.boilerplate.spring.web")
+@MapperScan(basePackages = "masssh.boilerplate.spring.web.dao")
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
     private final ApplicationProperty applicationProperty;
@@ -61,10 +61,5 @@ public class ApplicationConfiguration {
     @Bean
     public DataSourceTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
     }
 }

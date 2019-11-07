@@ -11,6 +11,8 @@ public class ApplicationProperty {
     private MysqlProperty mysql;
     private RedisProperty redis;
     private ElasticsearchProperty elasticsearch;
+    private OAuth2ClientProperty oauth2Google;
+    private CorsProperty cors;
 
     @Data
     public static class MysqlProperty {
@@ -36,4 +38,16 @@ public class ApplicationProperty {
         String clusterName;
     }
 
+    @Data
+    public static class OAuth2ClientProperty {
+        String clientId;
+        String clientSecret;
+        String redirectUriTemplate;
+        String scope;
+    }
+
+    @Data
+    public static class CorsProperty {
+        String origin;
+    }
 }

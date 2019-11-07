@@ -2,7 +2,6 @@ server:
   port: 8080
   error:
     whitelabel.enabled: false
-    path: /
 spring:
   profiles.active: local
   mvc:

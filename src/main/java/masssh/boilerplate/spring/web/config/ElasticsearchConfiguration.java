@@ -28,6 +28,7 @@ public class ElasticsearchConfiguration extends ElasticsearchConfigurationSuppor
 
     @Bean
     public Client elasticsearchClient() throws UnknownHostException {
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
         final ElasticsearchProperty property = applicationProperty.getElasticsearch();
         Settings settings = Settings.builder().put("cluster.name", property.getClusterName()).build();
         TransportClient client = new PreBuiltTransportClient(settings);

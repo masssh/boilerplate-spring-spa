@@ -1,18 +1,27 @@
-CREATE TABLE user (
-    userName varchar(50) not null,
-    userToken varchar(60) not null,
-    role varchar(50) not null
-);
-
-INSERT INTO user VALUES
-(
-    'user',
-    '$2y$10$5GyeNB5aCIw5CltzYtr4n.tkv4vz1bVKVMlPtR.4nkw4bOPrXylpa', -- 'user' encrypted by BCryptPasswordEncoder
-    'ROLE_USER'
-),
-(
-    'admin',
-    '$2y$10$d7Q.kOopMLQ9rRiNXd0k2esu0ND9nQZUBo2KZokz81CkCUBBVapd6', -- 'admin' encrypted by BCryptPasswordEncoder
-    'ROLE_ADMIN'
+CREATE TABLE oauth2_google (
+    subject VARCHAR(50) NOT NULL,
+    idToken VARCHAR(1500) NOT NULL,
+    accessToken VARCHAR(50) NOT NULL,
+    issuedAt bigint NOT NULL,
+    expiresAt bigint NOT NULL,
+    PRIMARY KEY (subject)
 )
+ENGINE = InnoDB
+DEFAULT CHARSET = utf8mb4
+;
+
+CREATE TABLE user (
+    userId VARCHAR(50) NOT NULL,
+    userName VARCHAR(50) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    locale VARCHAR(50) NOT NULL,
+    passwordHash VARCHAR(100) NULL,
+    accessToken VARCHAR(50) NOT NULL,
+    googleSubject VARCHAR(50) NULL,
+    PRIMARY KEY (userId),
+    CONSTRAINT fk_user_for_oauth2_google FOREIGN KEY (googleSubject) REFERENCES oauth2_google(subject)
+)
+ENGINE = InnoDB
+DEFAULT CHARSET = utf8mb4
 ;

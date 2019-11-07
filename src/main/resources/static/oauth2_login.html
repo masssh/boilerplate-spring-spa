@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.ico">
+    <title>Login with google</title>
+    <link href="/static/app.js" rel="preload" as="script">
+</head>
+<body>
+<h3>Login with:</h3>
+<p th:each="url : ${urls}">
+    <a th:text="${url.key}" th:href="${url.value}">Client</a>
+</p>
+<script type="text/javascript" src="/static/app.js"></script>
+</body>
+</html>

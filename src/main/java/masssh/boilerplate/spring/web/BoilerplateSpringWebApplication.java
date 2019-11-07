@@ -9,7 +9,6 @@ import java.io.IOException;
 public class BoilerplateSpringWebApplication {
 
     public static void main(String[] args) throws IOException {
-        System.setProperty("es.set.netty.runtime.available.processors", "false");
         SpringApplication.run(BoilerplateSpringWebApplication.class, args);
         JMXConnectorServerStarter.startJMXConnectorServer();
     }

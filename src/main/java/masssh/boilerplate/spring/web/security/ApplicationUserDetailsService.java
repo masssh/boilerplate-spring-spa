@@ -11,14 +11,14 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-class ApplicationUserService implements UserDetailsService {
+class ApplicationUserDetailsService implements UserDetailsService {
     private final UserDao userDao;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final Optional<UserRow> userOptional = userDao.single(username);
+    public UserDetails loadUserByUsername(final String userId) throws UsernameNotFoundException {
+        final Optional<UserRow> userOptional = userDao.single(userId);
         if (userOptional.isPresent()) {
-            return new ApplicationUser(userOptional.get());
+            return new ApplicationUserDetails(userOptional.get());
         }
         throw new UsernameNotFoundException("user not found.");
     }

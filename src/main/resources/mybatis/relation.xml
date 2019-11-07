@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mybatis.relation">
+<mapper namespace="masssh">
 
-    <!--    <resultMap id="authorBook" type="AuthorRow">-->
-    <!--        <collection property="bookRows" ofType="BookRow">-->
-    <!--            <result column="bookId" property="id"/>-->
-    <!--        </collection>-->
-    <!--    </resultMap>-->
+    <resultMap id="user-oauth2_google" type="UserRow">
+        <association property="oAuth2GoogleRow" columnPrefix="oauth2_google_"/>
+    </resultMap>
 
 </mapper>
