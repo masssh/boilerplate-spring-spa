@@ -1,1 +1,3 @@
-rootProject.name = 'boilerplate-spring-web'
+rootProject.name = 'boilerplate-spring-spa'
+include 'web'
+include 'client'

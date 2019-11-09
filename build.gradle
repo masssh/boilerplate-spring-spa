@@ -1,88 +1,16 @@
-buildscript {}
-
 plugins {
-    id "org.springframework.boot" version "2.2.0.RELEASE"
-    id "io.spring.dependency-management" version "1.0.8.RELEASE"
-    id "java"
-    id "jacoco"
-    id "maven"
+    id "idea"
+    id "org.springframework.boot" version "2.2.0.RELEASE" apply false
+    id 'io.freefair.lombok' version '4.1.0' apply false
 }
 
-final String _groupId = "masssh"
-final String _artifactId = "boilerplate-spring-cli"
-final String _version = new File(projectDir, "VERSION").getText().trim()
-
-repositories {
-    jcenter()
-}
-
-configurations {
-    implementation {
-        exclude module: "spring-boot-starter-tomcat"
-    }
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch"
-    implementation "org.springframework.boot:spring-boot-starter-jetty"
-    implementation "org.springframework.session:spring-session-data-redis"
-    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0"
-    implementation "de.codecentric:spring-boot-admin-starter-client:2.1.4"
-    implementation "org.jolokia:jolokia-core:1.6.2"
-    implementation "io.micrometer:micrometer-registry-prometheus:1.1.5"
-    compileOnly "org.projectlombok:lombok"
-    runtimeOnly "mysql:mysql-connector-java"
-    annotationProcessor "org.projectlombok:lombok"
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
-    }
-    testImplementation "org.springframework.security:spring-security-test"
-    testImplementation "org.jacoco:org.jacoco.build:0.8.3"
-}
-
-allprojects {}
-
-subprojects {}
-
-sourceCompatibility = "11"
-targetCompatibility = "11"
-archivesBaseName = "$_artifactId-$_version"
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
-                authentication(userName: "admin", password: "admin123")
-            }
-            snapshotRepository(url: "http://localhost:8081/nexus/content/repositories/snapshots/") {
-                authentication(userName: "admin", password: "admin123")
-            }
-            pom {
-                groupId = _groupId
-                artifactId = _artifactId
-                version = _version
-            }
-        }
-    }
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'jacoco'
 }
 
 wrapper {
     gradleVersion = "5.6.3"
-}
-
-test {
-    useJUnitPlatform()
-}
-
-jacoco {
-    toolVersion = "0.8.3"
 }

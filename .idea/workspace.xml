@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="92439b6d-dbd4-4fb4-80d7-f2a3bf3b8f0d" name="Default Changelist" comment="Refactor project structure">
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.2.1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.6.3/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.6.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.6.3/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.circleci/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/.circleci/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/web/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/web/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VERSION" beforeDir="false" afterPath="$PROJECT_DIR$/VERSION" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flyway/flyway.conf" beforeDir="false" afterPath="$PROJECT_DIR$/web/flyway/flyway.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flyway/sql/V1__create_sample_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/web/flyway/sql/V1__create_sample_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flyway/sql/V2__create_user_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/web/flyway/sql/V2__create_user_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/BoilerplateSpringWebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/BoilerplateSpringWebApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/advice/ApplicationExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/advice/ApplicationExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/config/ApplicationConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/config/ApplicationConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/config/ElasticsearchConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/config/ElasticsearchConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/config/RedisConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/config/RedisConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/config/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/config/property/ApplicationProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/config/property/ApplicationProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/controller/ApplicationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/controller/ApplicationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/controller/LocalOnlyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/controller/LocalOnlyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/controller/OAuth2Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/controller/OAuth2Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/controller/SampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/controller/SampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/dao/OAuth2GoogleDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/dao/OAuth2GoogleDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/dao/SampleDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/dao/SampleDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/dao/UserDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/dao/UserDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/dao/elasticsearch/FooRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/dao/elasticsearch/FooRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/document/FooDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/document/FooDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/request/SampleRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/request/SampleRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/response/BaseResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/response/BaseResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/response/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/response/ErrorResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/response/SuccessResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/response/SuccessResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/row/OAuth2GoogleRow.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/row/OAuth2GoogleRow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/row/SampleRow.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/row/SampleRow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/model/row/UserRow.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/model/row/UserRow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/ApplicationUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/ApplicationUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/ApplicationUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/ApplicationUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/OpenIdUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/OpenIdUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/RestAuthenticationSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/RestAuthenticationSuccessHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/Roles.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/Roles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/security/WebSecurityConfigurer.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/security/WebSecurityConfigurer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/service/EnvironmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/service/EnvironmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/masssh/boilerplate/spring/web/service/jmx/JMXConnectorServerStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/masssh/boilerplate/spring/web/service/jmx/JMXConnectorServerStarter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config/application-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/config/application-local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/config/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/config/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logback-spring.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/logback-spring.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mybatis/relation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/mybatis/relation.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/oauth2_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/static/oauth2_login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/masssh/boilerplate/spring/web/annotation/TestSetUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/test/java/masssh/boilerplate/spring/web/annotation/TestSetUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/masssh/boilerplate/spring/web/dao/OAuth2GoogleDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/test/java/masssh/boilerplate/spring/web/dao/OAuth2GoogleDaoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/masssh/boilerplate/spring/web/dao/UserDaoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/test/java/masssh/boilerplate/spring/web/dao/UserDaoTest.java" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1TM8VBuF3uZ5SnO4xJwu0lT9Y4N" />
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/settings.gradle" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+    <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="92439b6d-dbd4-4fb4-80d7-f2a3bf3b8f0d" name="Default Changelist" comment="" />
+      <created>1573258624145</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573258624145</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactor project structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor project structure" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+</project>
