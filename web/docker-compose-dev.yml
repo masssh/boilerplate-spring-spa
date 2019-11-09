@@ -1,0 +1,31 @@
+version: "3"
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    ports:
+      - 9400:5601
+    logging:
+      driver: none
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9222:9090
+    logging:
+      driver: none
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 9333:3000
+    user: "472"
+    logging:
+      driver: none
+
+  nexus:
+    image: sonatype/nexus:oss
+    ports:
+      - 8081:8081
+    logging:
+      driver: none
+

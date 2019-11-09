@@ -1,14 +1,68 @@
 plugins {
     id "idea"
     id "org.springframework.boot" version "2.2.0.RELEASE" apply false
-    id 'io.freefair.lombok' version '4.1.0' apply false
+    id "io.freefair.lombok" version "4.1.0" apply false
+    id "com.github.johnrengelman.shadow" version "5.1.0" apply false
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'io.freefair.lombok'
-    apply plugin: 'jacoco'
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "io.freefair.lombok"
+    apply plugin: "jacoco"
+
+    group "masssh.boilerplate.spa"
+    version "0.0.1-SNAPSHOT"
+
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
+
+    repositories {
+        jcenter()
+        maven {
+            url "http://localhost:8081/nexus/content/repositories/releases/"
+        }
+        maven {
+            url "http://localhost:8081/nexus/content/repositories/snapshots/"
+        }
+    }
+
+    ext {
+        mybatisVersion = "2.1.0"
+        bootAdminVersion = "2.1.4"
+        jolokiaVersion = "1.6.2"
+        micrometerVersion = "1.1.5"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            mavenBom 'org.junit:junit-bom:5.5.2'
+        }
+
+        dependencies {
+            dependency "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisVersion}"
+            dependency "de.codecentric:spring-boot-admin-starter-client:${bootAdminVersion}"
+            dependency "org.jolokia:jolokia-core:${jolokiaVersion}"
+            dependency "io.micrometer:micrometer-registry-prometheus:${micrometerVersion}"
+        }
+    }
+
+    dependencies {
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.security:spring-security-test"
+        testImplementation "org.junit.jupiter:junit-jupiter"
+        testImplementation "org.junit.vintage:junit-vintage-engine"
+        testImplementation "org.junit.platform:junit-platform-launcher"
+        testImplementation "org.mockito:mockito-junit-jupiter"
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "PASSED", "FAILED", "SKIPPED"
+        }
+    }
 }
 
 wrapper {
