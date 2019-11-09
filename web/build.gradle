@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot'
+    id "org.springframework.boot"
 }
 
 configurations {
@@ -9,9 +9,9 @@ configurations {
 }
 
 dependencies {
-    implementation project(':model')
-    implementation project(':dao')
-    implementation project(':property')
+    implementation project(":model")
+    implementation project(":dao")
+    implementation project(":property")
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
@@ -27,5 +27,5 @@ dependencies {
     implementation "io.micrometer:micrometer-registry-prometheus"
     runtimeOnly "mysql:mysql-connector-java"
 
-    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test'
+    testImplementation "org.mybatis.spring.boot:mybatis-spring-boot-starter-test"
 }
