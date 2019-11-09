@@ -1,7 +1,7 @@
 package masssh.boilerplate.spring.spa.web.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.config.ElasticsearchConfigurationSupport;

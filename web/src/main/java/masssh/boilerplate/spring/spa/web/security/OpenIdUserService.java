@@ -1,10 +1,10 @@
 package masssh.boilerplate.spring.spa.web.security;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.dao.OAuth2GoogleDao;
-import masssh.boilerplate.spring.spa.web.dao.UserDao;
-import masssh.boilerplate.spring.spa.web.model.row.OAuth2GoogleRow;
-import masssh.boilerplate.spring.spa.web.model.row.UserRow;
+import masssh.boilerplate.spring.spa.dao.OAuth2GoogleDao;
+import masssh.boilerplate.spring.spa.dao.UserDao;
+import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
+import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -29,7 +29,12 @@ class OpenIdUserService extends OidcUserService {
         Optional<UserRow> userRowOptional = userDao.singleBySubject(oidcUser.getSubject());
         UserRow userRow;
         if (userRowOptional.isEmpty()) {
-            final OAuth2GoogleRow newOauth2GoogleRow = new OAuth2GoogleRow(oidcUser);
+            final OAuth2GoogleRow newOauth2GoogleRow = new OAuth2GoogleRow(
+                    oidcUser.getSubject(),
+                    oidcUser.getIdToken().getTokenValue(),
+                    oidcUser.getAccessTokenHash(),
+                    oidcUser.getIssuedAt().getEpochSecond(),
+                    oidcUser.getExpiresAt().getEpochSecond());
             oAuth2GoogleDao.create(newOauth2GoogleRow);
 
             int count = 0;

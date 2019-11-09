@@ -2,13 +2,12 @@ package masssh.boilerplate.spring.spa.web.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -19,8 +18,7 @@ import java.io.IOException;
 
 @SuppressWarnings("WeakerAccess")
 @Configuration
-@ComponentScan("masssh.boilerplate.spring.spa.web")
-@MapperScan(basePackages = "masssh.boilerplate.spring.spa.web.dao")
+@MapperScan(basePackages = "masssh.boilerplate.spring.spa.dao")
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
     private final ApplicationProperty applicationProperty;
@@ -44,8 +42,8 @@ public class ApplicationConfiguration {
         final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader());
         final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setTypeHandlersPackage("masssh.boilerplate.spring.spa.web.dao.typehandler");
-        sqlSessionFactoryBean.setTypeAliasesPackage("masssh.boilerplate.spring.spa.web.model.row");
+        sqlSessionFactoryBean.setTypeHandlersPackage("masssh.boilerplate.spring.spa.dao.typehandler");
+        sqlSessionFactoryBean.setTypeAliasesPackage("masssh.boilerplate.spring.spa.model.row");
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
         final org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setUseGeneratedKeys(true);

@@ -1,7 +1,7 @@
 package masssh.boilerplate.spring.spa.web.security;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.web.service.EnvironmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

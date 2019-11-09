@@ -9,6 +9,9 @@ configurations {
 }
 
 dependencies {
+    implementation project(':model')
+    implementation project(':dao')
+    implementation project(':property')
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
@@ -23,4 +26,6 @@ dependencies {
     implementation "org.jolokia:jolokia-core"
     implementation "io.micrometer:micrometer-registry-prometheus"
     runtimeOnly "mysql:mysql-connector-java"
+
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test'
 }

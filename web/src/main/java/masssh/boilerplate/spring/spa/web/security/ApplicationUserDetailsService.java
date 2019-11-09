@@ -1,8 +1,8 @@
 package masssh.boilerplate.spring.spa.web.security;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.dao.UserDao;
-import masssh.boilerplate.spring.spa.web.model.row.UserRow;
+import masssh.boilerplate.spring.spa.dao.UserDao;
+import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

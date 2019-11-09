@@ -2,7 +2,7 @@ package masssh.boilerplate.spring.spa.web.security;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import masssh.boilerplate.spring.spa.web.model.row.UserRow;
+import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

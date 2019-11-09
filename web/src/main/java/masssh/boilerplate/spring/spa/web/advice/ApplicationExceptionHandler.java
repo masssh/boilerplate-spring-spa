@@ -3,7 +3,7 @@ package masssh.boilerplate.spring.spa.web.advice;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-import masssh.boilerplate.spring.spa.web.model.response.ErrorResponse;
+import masssh.boilerplate.spring.spa.model.response.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

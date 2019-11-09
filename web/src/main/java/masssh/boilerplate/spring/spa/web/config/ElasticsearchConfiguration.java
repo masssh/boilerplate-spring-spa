@@ -1,8 +1,8 @@
 package masssh.boilerplate.spring.spa.web.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty.ElasticsearchProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty.ElasticsearchProperty;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -20,7 +20,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "masssh.boilerplate.spring.spa.web.dao.elasticsearch")
+@EnableElasticsearchRepositories(basePackages = "masssh.boilerplate.spring.spa.dao.elasticsearch")
 @RequiredArgsConstructor
 @SuppressWarnings("ALL")
 public class ElasticsearchConfiguration extends ElasticsearchConfigurationSupport {

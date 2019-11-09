@@ -1,8 +1,8 @@
 package masssh.boilerplate.spring.spa.web.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty;
-import masssh.boilerplate.spring.spa.web.config.property.ApplicationProperty.OAuth2ClientProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty.OAuth2ClientProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
