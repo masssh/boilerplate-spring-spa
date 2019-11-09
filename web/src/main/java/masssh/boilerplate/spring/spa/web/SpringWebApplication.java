@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan("masssh.boilerplate.spring.spa.web")
+@ComponentScan("masssh.boilerplate.spring.spa")
 public class SpringWebApplication {
 
     public static void main(String[] args) throws IOException {

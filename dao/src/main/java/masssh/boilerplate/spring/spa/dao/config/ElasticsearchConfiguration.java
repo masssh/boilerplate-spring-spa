@@ -1,4 +1,4 @@
-package masssh.boilerplate.spring.spa.web.config;
+package masssh.boilerplate.spring.spa.dao.config;
 
 import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty;
