@@ -32,7 +32,7 @@ management:
     username: adminuser
     password: adminuser
     instance:
-      name: boilerplate-spring-web
+      name: web
       service-base-url: http://host.docker.internal:8080/
       prefer-ip: false
       metadata:

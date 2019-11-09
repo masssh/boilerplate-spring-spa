@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-    <property name="APP_LOG_FILENAME" value="boilerplate-spring-web.log"/>
+    <property name="APP_LOG_FILENAME" value="web.log"/>
 
     <logger name="org.apache.commons.httpclient" level="DEBUG"/>
     <logger name="httpclient.wire.header" level="DEBUG"/>
