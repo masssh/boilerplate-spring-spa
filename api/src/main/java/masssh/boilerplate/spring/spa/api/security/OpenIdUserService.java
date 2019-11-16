@@ -77,6 +77,7 @@ class OpenIdUserService extends OidcUserService {
         oAuth2GoogleDao.update(oAuth2GoogleRow);
 
         userRow.setUserName(oidcUser.getName());
+        userRow.setEmail(oidcUser.getEmail());
         userRow.setLocale(oidcUser.getLocale());
         userRow.setGoogleSubject(oidcUser.getSubject());
     }
