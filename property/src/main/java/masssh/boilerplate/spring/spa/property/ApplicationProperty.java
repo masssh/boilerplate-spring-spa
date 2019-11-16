@@ -12,8 +12,7 @@ public class ApplicationProperty {
     private RedisProperty redis;
     private ElasticsearchProperty elasticsearch;
     private OAuth2ClientProperty oauth2Google;
-    private CorsProperty cors;
-    private UrlProperty url;
+    private SecurityProperty security;
 
     @Data
     public static class MysqlProperty {
@@ -48,12 +47,8 @@ public class ApplicationProperty {
     }
 
     @Data
-    public static class CorsProperty {
-        String origin;
-    }
-
-    @Data
-    public static class UrlProperty {
+    public static class SecurityProperty {
+        String allowOrigin;
         String loginSuccess;
     }
 }

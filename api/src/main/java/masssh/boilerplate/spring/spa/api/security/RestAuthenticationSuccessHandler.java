@@ -77,6 +77,6 @@ class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private void setResponse(HttpServletResponse response, String token) throws IOException {
         response.setHeader(HttpHeader.AUTHORIZATION.asString(), String.format("Bearer %s", token));
-        response.sendRedirect(applicationProperty.getUrl().getLoginSuccess());
+        response.sendRedirect(applicationProperty.getSecurity().getLoginSuccess());
     }
 }
