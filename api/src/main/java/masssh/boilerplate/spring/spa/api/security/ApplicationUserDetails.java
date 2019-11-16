@@ -5,6 +5,7 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import java.util.Collection;
 
 @Data
@@ -40,6 +41,6 @@ class ApplicationUserDetails implements UserDetails {
     }
 
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !StringUtils.isEmpty(userRow.getAccessToken());
     }
 }
