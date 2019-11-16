@@ -25,6 +25,9 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE googleSubject = #{subject}")
     Optional<UserRow> singleBySubject(@Param("subject") String subject);
 
+    @Select("SELECT * FROM user WHERE googleSubject = #{email}")
+    Optional<UserRow> singleByEmail(@Param("email") String email);
+
     @SelectProvider(type = SqlProvider.class)
     @ResultMap({"masssh.user-oauth2_google"})
     Optional<UserRow> singleOAuth2Detail(String subject);

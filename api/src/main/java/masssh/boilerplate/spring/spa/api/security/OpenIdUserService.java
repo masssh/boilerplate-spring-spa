@@ -1,5 +1,7 @@
 package masssh.boilerplate.spring.spa.api.security;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.spa.dao.OAuth2GoogleDao;
 import masssh.boilerplate.spring.spa.dao.UserDao;
@@ -12,10 +14,9 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -30,26 +31,33 @@ class OpenIdUserService extends OidcUserService {
         Optional<UserRow> userRowOptional = userDao.singleBySubject(oidcUser.getSubject());
         UserRow userRow;
         if (userRowOptional.isEmpty()) {
-            final OAuth2GoogleRow newOauth2GoogleRow = new OAuth2GoogleRow(
-                    oidcUser.getSubject(),
-                    oidcUser.getIdToken().getTokenValue(),
-                    oidcUser.getAccessTokenHash(),
-                    oidcUser.getIssuedAt().getEpochSecond(),
-                    oidcUser.getExpiresAt().getEpochSecond());
-            oAuth2GoogleDao.create(newOauth2GoogleRow);
+            userRowOptional = userDao.singleByEmail(oidcUser.getEmail());
+            if (userRowOptional.isPresent()) {
+                userRow = userRowOptional.get();
+                updateUserAttributes(userRow, oidcUser);
+            } else {
+                final OAuth2GoogleRow newOAuth2GoogleRow = new OAuth2GoogleRow(
+                        oidcUser.getSubject(),
+                        oidcUser.getIdToken().getTokenValue(),
+                        oidcUser.getAccessTokenHash(),
+                        oidcUser.getIssuedAt().getEpochSecond(),
+                        oidcUser.getExpiresAt().getEpochSecond());
+                oAuth2GoogleDao.create(newOAuth2GoogleRow);
 
-            userRow = userCreator.tryCreate(
-                    new UserRow(newOauth2GoogleRow,
-                            null,
-                            oidcUser.getName(),
-                            Roles.ROLE_USER,
-                            oidcUser.getEmail(),
-                            oidcUser.getLocale(),
-                            null,
-                            DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes()),
-                            oidcUser.getSubject()));
+                userRow = userCreator.tryCreate(
+                        new UserRow(newOAuth2GoogleRow,
+                                null,
+                                oidcUser.getName(),
+                                Roles.ROLE_USER,
+                                oidcUser.getEmail(),
+                                oidcUser.getLocale(),
+                                null,
+                                null,
+                                oidcUser.getSubject()));
+            }
         } else {
             userRow = userRowOptional.get();
+            updateUserAttributes(userRow, oidcUser);
         }
         final OAuth2UserAuthority authority = new OAuth2UserAuthority(userRow.getRole(), oidcUser.getAttributes());
         return new DefaultOidcUser(
@@ -57,5 +65,19 @@ class OpenIdUserService extends OidcUserService {
                 oidcUser.getIdToken(),
                 oidcUser.getUserInfo(),
                 userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName());
+    }
+
+    private void updateUserAttributes(final UserRow userRow, final OidcUser oidcUser) {
+        final OAuth2GoogleRow oAuth2GoogleRow = oAuth2GoogleDao.single(oidcUser.getSubject())
+                                                        .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR));
+        oAuth2GoogleRow.setIdToken(oidcUser.getIdToken().getTokenValue());
+        oAuth2GoogleRow.setAccessToken(oidcUser.getAccessTokenHash());
+        oAuth2GoogleRow.setIssuedAt(oidcUser.getIssuedAt().getEpochSecond());
+        oAuth2GoogleRow.setExpiresAt(oidcUser.getExpiresAt().getEpochSecond());
+        oAuth2GoogleDao.update(oAuth2GoogleRow);
+
+        userRow.setUserName(oidcUser.getName());
+        userRow.setLocale(oidcUser.getLocale());
+        userRow.setGoogleSubject(oidcUser.getSubject());
     }
 }
