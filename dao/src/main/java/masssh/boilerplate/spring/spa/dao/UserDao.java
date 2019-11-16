@@ -25,7 +25,7 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE googleSubject = #{subject}")
     Optional<UserRow> singleBySubject(@Param("subject") String subject);
 
-    @Select("SELECT * FROM user WHERE googleSubject = #{email}")
+    @Select("SELECT * FROM user WHERE email = #{email}")
     Optional<UserRow> singleByEmail(@Param("email") String email);
 
     @SelectProvider(type = SqlProvider.class)

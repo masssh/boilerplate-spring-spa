@@ -1,29 +1,38 @@
 <template>
   <div class="login">
     <h1>This is an login page</h1>
-    <a href="/oauth2/authorization/google">Google</a>
+    <div>
+      <label>Email</label>
+      <input type="email" name="email" value="" v-model="email" />
+    </div>
+    <div>
+      <label>Password</label>
+      <input type="password" name="password" value="" v-model="password" />
+    </div>
+    <button type="button" @click="onSubmit">Submit</button>
   </div>
 </template>
 
 <script>
+import { login } from "@/api";
 
 export default {
   name: "login",
-  components: {
-  },
-  data() {
+  components: {},
+  data: function() {
     return {
+      email: "",
+      password: ""
     };
   },
-  mounted() {
-  },
-  validations() {
-    const validate = {};
-    return validate;
-  },
-  destroyed() {
-  },
+  created: function() {},
   methods: {
-  },
+    onSubmit: function() {
+      login({
+        email: this.email,
+        password: this.password
+      });
+    }
+  }
 };
 </script>

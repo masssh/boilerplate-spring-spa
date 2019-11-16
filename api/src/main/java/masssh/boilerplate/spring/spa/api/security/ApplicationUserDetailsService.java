@@ -1,6 +1,7 @@
 package masssh.boilerplate.spring.spa.api.security;
 
 import lombok.RequiredArgsConstructor;
+import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.dao.UserDao;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
@@ -9,19 +10,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class ApplicationUserDetailsService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
     private final UserDao userDao;
+    private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(final String userId) throws UsernameNotFoundException {
-        final Optional<UserRow> userOptional = userDao.single(userId);
-        if (userOptional.isPresent()) {
-            return new ApplicationUserDetails(userOptional.get());
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        final Optional<UserRow> userRowOptional = userDao.singleByEmail(email);
+        if (userRowOptional.isPresent()) {
+            final UserRow userRow = userRowOptional.get();
+            return new ApplicationUserDetails(userRow);
         }
         throw new UsernameNotFoundException("user not found.");
     }
@@ -32,19 +34,14 @@ public class ApplicationUserDetailsService implements UserDetailsService, Authen
         final String accessToken = (String) token.getCredentials();
         final Optional<UserRow> userOptional = userDao.single(userId);
         if (userOptional.isPresent()) {
-            authenticateAccessToken(userOptional.get(), accessToken);
+            validateAccessToken(userOptional.get(), accessToken);
             return new ApplicationUserDetails(userOptional.get());
         }
         throw new UsernameNotFoundException("user not found.");
     }
 
-    private void authenticateAccessToken(final UserRow user, final String accessToken) {
-        if (StringUtils.isEmpty(user.getAccessToken())) {
-            throw new UsernameNotFoundException("user not found.");
-        }
-        if (!user.getAccessToken().equals(accessToken)) {
-            user.setAccessToken(null);
-            userDao.update(user);
+    private void validateAccessToken(final UserRow user, final String accessToken) {
+        if (!userService.validateAccessToken(user, accessToken)) {
             throw new UsernameNotFoundException("user not found.");
         }
     }

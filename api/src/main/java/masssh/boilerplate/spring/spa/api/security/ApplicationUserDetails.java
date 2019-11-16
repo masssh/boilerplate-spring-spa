@@ -5,7 +5,6 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.StringUtils;
 import java.util.Collection;
 
 @Data
@@ -17,11 +16,11 @@ class ApplicationUserDetails implements UserDetails {
     }
 
     public String getUsername() {
-        return userRow.getUserId();
+        return userRow.getEmail();
     }
 
     public String getPassword() {
-        return userRow.getAccessToken();
+        return userRow.getPasswordHash();
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -41,6 +40,6 @@ class ApplicationUserDetails implements UserDetails {
     }
 
     public boolean isCredentialsNonExpired() {
-        return !StringUtils.isEmpty(userRow.getAccessToken());
+        return true;
     }
 }

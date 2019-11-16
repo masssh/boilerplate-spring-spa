@@ -20,6 +20,7 @@ CREATE TABLE user (
     accessToken VARCHAR(50) NULL,
     googleSubject VARCHAR(50) NULL,
     PRIMARY KEY (userId),
+    UNIQUE KEY (email),
     CONSTRAINT fk_user_for_oauth2_google FOREIGN KEY (googleSubject) REFERENCES oauth2_google(subject)
 )
 ENGINE = InnoDB

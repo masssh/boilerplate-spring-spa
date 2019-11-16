@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -38,26 +39,28 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.addFilter(requestHeaderAuthenticationFilter);
-
         if (environmentService.isLocal()) {
             http.authorizeRequests()
                     .antMatchers("/local/**").permitAll();
         }
+
         http.authorizeRequests()
-                .antMatchers("/", "/login", "/favicon.ico", "/oauth2/**", "/actuator/**").permitAll()
+                .antMatchers("/", "/api/login", "/api/user/add", "/favicon.ico", "/oauth2/**", "/actuator/**").permitAll()
                 .anyRequest()
                 .authenticated();
 
-        http.formLogin()
-                .loginProcessingUrl("/api/login")
-                .usernameParameter("userId")
-                .passwordParameter("password")
-                .successHandler(restAuthenticationSuccessHandler)
-                .failureHandler(restAuthenticationFailureHandler);
+        // Authorization with access token in HTTP Header
+        http.addFilter(requestHeaderAuthenticationFilter);
+
+        // Login API
+        final RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter();
+        restAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+        restAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+        restAuthenticationFilter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
+        restAuthenticationFilter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
+        http.addFilter(restAuthenticationFilter);
 
         http.oauth2Login()
-                .loginPage("/login")
                 .successHandler(restAuthenticationSuccessHandler)
                 .failureHandler(restAuthenticationFailureHandler)
                 .permitAll()
@@ -68,14 +71,13 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .oidcUserService(openIdUserService);
 
         http.logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/api/logout")
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 
         http.exceptionHandling()
                 .defaultAuthenticationEntryPointFor(new RestEntryPoint(HttpStatus.UNAUTHORIZED), AnyRequestMatcher.INSTANCE);
 
         final CookieCsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
-
         csrfTokenRepository.setCookieHttpOnly(false);
         http.csrf().csrfTokenRepository(csrfTokenRepository);
 
