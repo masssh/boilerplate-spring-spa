@@ -50,6 +50,9 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authenticated();
 
         http.formLogin()
+                .loginProcessingUrl("/api/login")
+                .usernameParameter("userId")
+                .passwordParameter("password")
                 .successHandler(restAuthenticationSuccessHandler)
                 .failureHandler(restAuthenticationFailureHandler);
 
