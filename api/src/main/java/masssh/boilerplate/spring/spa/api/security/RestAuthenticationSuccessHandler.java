@@ -13,12 +13,14 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -30,19 +32,28 @@ class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         final Object principal = authentication.getPrincipal();
-        final String token;
+        final UserRow userRow;
+        String token;
         if (principal instanceof ApplicationUserDetails) {
             final ApplicationUserDetails user = (ApplicationUserDetails) authentication.getPrincipal();
-            token = user.getUserRow().getAccessToken();
+            userRow = user.getUserRow();
+            token = userRow.getAccessToken();
         } else if (principal instanceof DefaultOidcUser) {
             final DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
             final Optional<UserRow> userRowOptional = userDao.singleBySubject(user.getSubject());
             if (userRowOptional.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            token = userRowOptional.get().getAccessToken();
+            userRow = userRowOptional.get();
+            token = userRow.getAccessToken();
         } else {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (StringUtils.isEmpty(token)) {
+            token = DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
+            userRow.setAccessToken(token);
+            userDao.update(userRow);
         }
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
