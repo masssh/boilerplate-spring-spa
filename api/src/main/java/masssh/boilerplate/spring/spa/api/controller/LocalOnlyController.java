@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -55,6 +56,21 @@ public class LocalOnlyController {
                         request.getEmail(),
                         Locale.JAPAN.toLanguageTag(),
                         passwordEncoder.encode(request.getPassword()),
+                        DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes()),
+                        null));
+        return ResponseEntity.ok(Map.of("token", userRow.getAccessToken()));
+    }
+
+    @GetMapping("/local/user/add/random")
+    public ResponseEntity<Map<String, String>> addUserRandom() {
+        final UserRow userRow = userCreator.tryCreate(
+                new UserRow(null,
+                        null,
+                        "user" + Instant.now().getEpochSecond(),
+                        Roles.ROLE_USER,
+                        "test@example.com",
+                        Locale.JAPAN.toLanguageTag(),
+                        passwordEncoder.encode("test"),
                         DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes()),
                         null));
         return ResponseEntity.ok(Map.of("token", userRow.getAccessToken()));

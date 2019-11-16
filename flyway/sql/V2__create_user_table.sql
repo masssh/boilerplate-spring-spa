@@ -17,7 +17,7 @@ CREATE TABLE user (
     email VARCHAR(100) NOT NULL,
     locale VARCHAR(50) NOT NULL,
     passwordHash VARCHAR(100) NULL,
-    accessToken VARCHAR(50) NOT NULL,
+    accessToken VARCHAR(50) NULL,
     googleSubject VARCHAR(50) NULL,
     PRIMARY KEY (userId),
     CONSTRAINT fk_user_for_oauth2_google FOREIGN KEY (googleSubject) REFERENCES oauth2_google(subject)

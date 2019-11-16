@@ -20,7 +20,7 @@ class ApplicationUserDetails implements UserDetails {
     }
 
     public String getPassword() {
-        return userRow.getPasswordHash();
+        return userRow.getAccessToken();
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {

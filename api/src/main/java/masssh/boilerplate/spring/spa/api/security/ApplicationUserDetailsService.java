@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
-import java.util.Objects;
+import org.springframework.util.StringUtils;
 import java.util.Optional;
 
 @Component
@@ -31,9 +31,21 @@ public class ApplicationUserDetailsService implements UserDetailsService, Authen
         final String userId = (String) token.getPrincipal();
         final String accessToken = (String) token.getCredentials();
         final Optional<UserRow> userOptional = userDao.single(userId);
-        if (userOptional.isPresent() && Objects.equals(userOptional.get().getAccessToken(), accessToken)) {
+        if (userOptional.isPresent()) {
+            authenticateAccessToken(userOptional.get(), accessToken);
             return new ApplicationUserDetails(userOptional.get());
         }
         throw new UsernameNotFoundException("user not found.");
+    }
+
+    private void authenticateAccessToken(final UserRow user, final String accessToken) {
+        if (StringUtils.isEmpty(user.getAccessToken())) {
+            throw new UsernameNotFoundException("user not found.");
+        }
+        if (!user.getAccessToken().equals(accessToken)) {
+            user.setAccessToken(null);
+            userDao.update(user);
+            throw new UsernameNotFoundException("user not found.");
+        }
     }
 }
