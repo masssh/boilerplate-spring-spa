@@ -13,6 +13,7 @@ public class ApplicationProperty {
     private ElasticsearchProperty elasticsearch;
     private OAuth2ClientProperty oauth2Google;
     private CorsProperty cors;
+    private UrlProperty url;
 
     @Data
     public static class MysqlProperty {
@@ -49,5 +50,10 @@ public class ApplicationProperty {
     @Data
     public static class CorsProperty {
         String origin;
+    }
+
+    @Data
+    public static class UrlProperty {
+        String loginSuccess;
     }
 }

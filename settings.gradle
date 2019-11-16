@@ -1,5 +1,5 @@
 rootProject.name = 'boilerplate-spring-spa'
-include 'web'
+include 'api'
 include 'model'
 include 'dao'
 include 'property'
