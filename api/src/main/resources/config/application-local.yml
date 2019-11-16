@@ -15,13 +15,12 @@ config:
     host: 127.0.0.1
     port: 9300
     cluster-name: docker-cluster
-  cors:
-    origin: http://localhost:8070
   oauth2-google:
     client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
     client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
     scope: openid,email,profile
-  url:
+  security:
+    allow-origin: http://localhost:8070
     login-success: http://localhost:8070/home
 
 management:
