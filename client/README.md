@@ -1,29 +1,22 @@
-# test
+# client
 
-## Project setup
-```
-yarn install
-```
+> Nuxt.js project
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Build Setup
 
-### Compiles and minifies for production
-```
-yarn build
-```
+``` bash
+# install dependencies
+$ yarn install
 
-### Run your unit tests
-```
-yarn test:unit
-```
+# serve with hot reload at localhost:3000
+$ yarn dev
 
-### Lints and fixes files
-```
-yarn lint
+# build for production and launch server
+$ yarn build
+$ yarn start
+
+# generate static project
+$ yarn generate
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
