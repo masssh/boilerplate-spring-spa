@@ -30,7 +30,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/axios.js'],
+  plugins: [],
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,6 +45,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     '@nuxtjs/font-awesome',
     '@nuxtjs/sentry'
   ],
@@ -53,6 +54,9 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+
+  auth: {},
+
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
