@@ -6,7 +6,6 @@ import masssh.boilerplate.spring.spa.dao.UserDao;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -14,19 +13,9 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ApplicationUserDetailsService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
+public class ApplicationUserDetailsService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
     private final UserDao userDao;
     private final UserService userService;
-
-    @Override
-    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        final Optional<UserRow> userRowOptional = userDao.singleByEmail(email);
-        if (userRowOptional.isPresent()) {
-            final UserRow userRow = userRowOptional.get();
-            return new ApplicationUserDetails(userRow);
-        }
-        throw new UsernameNotFoundException("user not found.");
-    }
 
     @Override
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {

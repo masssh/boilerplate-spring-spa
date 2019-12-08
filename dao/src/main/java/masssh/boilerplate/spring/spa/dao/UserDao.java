@@ -28,6 +28,10 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE email = #{email}")
     Optional<UserRow> singleByEmail(@Param("email") String email);
 
+    @Select("SELECT * FROM user WHERE email = #{email} AND password = #{password}")
+    Optional<UserRow> singleByEmailAndPassword(@Param("email") String email,
+                                               @Param("password") String password);
+
     @SelectProvider(type = SqlProvider.class)
     @ResultMap({"masssh.user-oauth2_google"})
     Optional<UserRow> singleOAuth2Detail(String subject);

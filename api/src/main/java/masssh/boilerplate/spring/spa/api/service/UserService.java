@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
+import javax.servlet.http.Cookie;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,14 @@ public class UserService {
     private final UserCreator userCreator;
     private final OAuth2GoogleDao oAuth2GoogleDao;
     private final PasswordEncoder passwordEncoder;
+
+    public Optional<UserRow> loadUserByEmail(final String email) {
+        return userDao.singleByEmail(email);
+    }
+
+    public Optional<UserRow> loadUserFromCookie(final Cookie[] cookies) {
+
+    }
 
     public void registerUser(final String userName, final String password, final String email, final Locale locale) {
         createUser(userName, password, email, locale.toLanguageTag(), null);

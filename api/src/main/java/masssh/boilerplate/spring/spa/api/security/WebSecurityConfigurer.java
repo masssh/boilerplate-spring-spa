@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -53,12 +52,12 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.addFilter(requestHeaderAuthenticationFilter);
 
         // Login API
-        final RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter();
-        restAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
-        restAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
-        restAuthenticationFilter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
-        restAuthenticationFilter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
-        http.addFilter(restAuthenticationFilter);
+//        final RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter();
+//        restAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+//        restAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+//        restAuthenticationFilter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
+//        restAuthenticationFilter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
+//        http.addFilter(restAuthenticationFilter);
 
         http.oauth2Login()
                 .successHandler(restAuthenticationSuccessHandler)

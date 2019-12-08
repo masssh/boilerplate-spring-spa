@@ -55,7 +55,17 @@ export default {
    */
   axios: {},
 
-  auth: {},
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/api/login', method: 'post', propertyName: 'token' }
+        },
+        tokenRequired: true,
+        tokenType: 'bearer'
+      }
+    }
+  },
 
   /*
    ** vuetify module configuration

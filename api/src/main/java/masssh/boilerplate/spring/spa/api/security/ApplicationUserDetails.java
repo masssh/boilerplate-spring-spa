@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @Data
-class ApplicationUserDetails implements UserDetails {
+public class ApplicationUserDetails implements UserDetails {
     private final UserRow userRow;
 
-    ApplicationUserDetails(final UserRow userRow) {
+    public ApplicationUserDetails(final UserRow userRow) {
         this.userRow = userRow;
     }
 
