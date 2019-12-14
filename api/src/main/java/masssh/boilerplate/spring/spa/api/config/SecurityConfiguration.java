@@ -1,7 +1,8 @@
 package masssh.boilerplate.spring.spa.api.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.api.security.ApplicationUserDetailsService;
+import masssh.boilerplate.spring.spa.api.security.CookiePreAuthenticationFilter;
+import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.OAuth2ClientProperty;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,6 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
-import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import java.util.List;
 
 @Configuration
@@ -72,19 +72,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider) {
-        RequestHeaderAuthenticationFilter filter = new RequestHeaderAuthenticationFilter();
-        filter.setPrincipalRequestHeader("X-Access-Id");
-        filter.setCredentialsRequestHeader("X-Access-Token");
-        filter.setExceptionIfHeaderMissing(false);
+    public CookiePreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
+                                                                           final UserService userService) {
+        CookiePreAuthenticationFilter filter = new CookiePreAuthenticationFilter(userService);
         filter.setAuthenticationManager(new ProviderManager(List.of(preAuthenticationProvider)));
         return filter;
     }
 
     @Bean
-    public PreAuthenticatedAuthenticationProvider preAuthenticationProvider(final ApplicationUserDetailsService applicationUserDetailsService) {
+    public PreAuthenticatedAuthenticationProvider preAuthenticationProvider(final UserService userService) {
         PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
-        provider.setPreAuthenticatedUserDetailsService(applicationUserDetailsService);
+        provider.setPreAuthenticatedUserDetailsService(userService);
         return provider;
     }
 }

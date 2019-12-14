@@ -1,24 +1,22 @@
 package masssh.boilerplate.spring.spa.api.controller;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import masssh.boilerplate.spring.spa.api.security.ApplicationUserDetailsService;
+import masssh.boilerplate.spring.spa.api.service.CookieService;
 import masssh.boilerplate.spring.spa.api.service.UserService;
-import masssh.boilerplate.spring.spa.dao.UserDao;
+import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.response.BaseResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -29,34 +27,32 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class LoginController {
-    private final UserDao userDao;
-    private final ApplicationUserDetailsService applicationUserDetailsService;
     private final UserService userService;
+    private final CookieService cookieService;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/api/login")
-    public ResponseEntity<LoginResponse> addUser(@Valid @RequestBody final LoginRequest request,
-                                                 final BindingResult bindingResult,
-                                                 @CookieValue(name = "userId")) {
+    public ResponseEntity<LoginResponse> login(final HttpServletResponse response,
+                                               @Valid @RequestBody final LoginRequest loginRequest,
+                                               final BindingResult bindingResult) {
+        final String email = loginRequest.getEmail();
+        final String password = loginRequest.getPassword();
+        final UserRow userRow;
+
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(BAD_REQUEST);
         }
-
-        final String email = request.getEmail().trim();
-        final String password = request.getPassword().trim();
-
-        final Optional<UserRow> userRowOptional = userService.loadUserByEmail(email);
-        if (userRowOptional.isEmpty()) {
-            user
-        }
-
-
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Bad Credentials");
+        userRow = userService.loadUserByEmail(email).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        if (!passwordEncoder.matches(password, userRow.getPasswordHash())) {
+            throw new ResponseStatusException(NOT_FOUND);
         }
 
         // refresh accessToken
         userService.refreshAccessToken(userRow);
+
+        // set cookie
+        final UserToken userToken = new UserToken(userRow.getUserId(), userRow.getAccessToken());
+        Optional.ofNullable(userService.encodeUserToken(userToken)).ifPresent(token -> cookieService.setId(response, token));
 
         return ResponseEntity.ok(new LoginResponse(OK.value(), "Login successfully", userRow.getAccessToken(), userRow.getRole()));
     }

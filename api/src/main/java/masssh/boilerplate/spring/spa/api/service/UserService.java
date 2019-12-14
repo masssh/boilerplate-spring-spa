@@ -2,38 +2,64 @@ package masssh.boilerplate.spring.spa.api.service;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import masssh.boilerplate.spring.spa.api.security.ApplicationUserDetails;
 import masssh.boilerplate.spring.spa.api.security.Roles;
 import masssh.boilerplate.spring.spa.dao.OAuth2GoogleDao;
 import masssh.boilerplate.spring.spa.dao.UserDao;
 import masssh.boilerplate.spring.spa.dao.service.UserCreator;
+import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-import javax.servlet.http.Cookie;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class UserService {
+@Slf4j
+public class UserService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
     private final UserDao userDao;
     private final UserCreator userCreator;
     private final OAuth2GoogleDao oAuth2GoogleDao;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
+
+    @Override
+    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
+        final String userId = (String) token.getPrincipal();
+        final String accessToken = (String) token.getCredentials();
+        final Optional<UserRow> userOptional = userDao.single(userId);
+        if (userOptional.isPresent()) {
+            final UserRow user = userOptional.get();
+            if (validateAccessToken(user, accessToken)) {
+                return new ApplicationUserDetails(user);
+            }
+        }
+        throw new UsernameNotFoundException("user not found.");
+    }
 
     public Optional<UserRow> loadUserByEmail(final String email) {
         return userDao.singleByEmail(email);
     }
 
-    public Optional<UserRow> loadUserFromCookie(final Cookie[] cookies) {
-
+    public Optional<UserRow> loadUserByUserId(final String userId) {
+        return userDao.single(userId);
     }
 
     public void registerUser(final String userName, final String password, final String email, final Locale locale) {
@@ -126,5 +152,29 @@ public class UserService {
 
     private String generateAccessToken() {
         return DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
+    }
+
+    public String encodeUserToken(final UserToken userToken) {
+        if (userToken == null) {
+            return null;
+        }
+        try {
+            return Base64Utils.encodeToString(objectMapper.writeValueAsBytes(userToken));
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize user token userId: {}", userToken.getUserId());
+        }
+        return null;
+    }
+
+    public UserToken decodeUserToken(final String token) {
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(Base64Utils.decodeFromString(token), UserToken.class);
+        } catch (IOException e) {
+            log.error("Failed to deserialize user token token: {}", token);
+        }
+        return null;
     }
 }
