@@ -79,8 +79,8 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'Public',
+          to: '/public'
         }
       ],
       miniVariant: false,
