@@ -81,6 +81,11 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Public',
           to: '/public'
+        },
+        {
+          icon: 'mdi-chart-circle',
+          title: 'Secret',
+          to: '/secret'
         }
       ],
       miniVariant: false,

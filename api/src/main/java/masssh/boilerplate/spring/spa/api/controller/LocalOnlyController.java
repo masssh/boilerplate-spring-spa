@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+
 @Profile(value = "local")
 @RestController
 @RequiredArgsConstructor
@@ -63,14 +64,15 @@ public class LocalOnlyController {
 
     @GetMapping("/local/user/add/random")
     public ResponseEntity<Map<String, String>> addUserRandom() {
+        final String uid = String.valueOf(Instant.now().getEpochSecond());
         final UserRow userRow = userCreator.tryCreate(
                 new UserRow(null,
                         null,
-                        "user" + Instant.now().getEpochSecond(),
+                        "user" + uid,
                         Roles.ROLE_USER,
-                        "test@example.com",
+                        uid + "@example.com",
                         Locale.JAPAN.toLanguageTag(),
-                        passwordEncoder.encode("test"),
+                        passwordEncoder.encode("12345678"),
                         DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes()),
                         null));
         return ResponseEntity.ok(Map.of("token", userRow.getAccessToken()));

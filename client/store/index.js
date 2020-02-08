@@ -5,17 +5,22 @@ export const state = () => ({
 export const mutations = {
   login(state, response) {
     state.isLoggedIn = true
-    console.log(response)
   }
 }
 
 export const actions = {
-  async login({ commit }) {
-    const response = await this.$axios.$post(
-      'http://localhost:8080/api/login',
-      { email: 'hello@example.com', password: 12345678 }
-    )
-    commit('login', response)
+  async login({ commit }, { onSuccess, onFailure }) {
+    const response = await this.$axios.$post('/api/login', {
+      email: '1577935387@example.com',
+      password: '12345678'
+    })
+    if (status === 200) {
+      console.log('success')
+      commit('login', response)
+      this.$router.push(onSuccess)
+    } else {
+      console.log('fail', onFailure)
+      this.$router.push(onFailure)
+    }
   }
 }
-

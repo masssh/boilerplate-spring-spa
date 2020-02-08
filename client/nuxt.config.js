@@ -1,7 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  mode: 'universal',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
@@ -45,7 +45,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
+    '@nuxtjs/proxy',
     '@nuxtjs/font-awesome',
     '@nuxtjs/sentry'
   ],
@@ -54,17 +54,11 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
-
-  auth: {
-    strategies: {
-      local: {
-        endpoints: {
-          login: { url: '/api/login', method: 'post', propertyName: 'token' }
-        },
-        tokenRequired: true,
-        tokenType: 'bearer'
-      }
-    }
+  proxy: {
+    '/api': 'http://localhost:8080'
+  },
+  router: {
+    middleware: 'auth'
   },
 
   /*
