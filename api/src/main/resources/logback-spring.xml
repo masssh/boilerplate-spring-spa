@@ -35,6 +35,7 @@
     <springProfile name="release">
         <include resource="logback/appender/logback-file.xml"/>
         <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="APPLICATION_LOG_FILE"/>
         </root>
     </springProfile>
