@@ -1,7 +1,7 @@
 package masssh.boilerplate.spring.spa.api.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.api.security.CookiePreAuthenticationFilter;
+import masssh.boilerplate.spring.spa.api.security.TokenPreAuthenticationFilter;
 import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.OAuth2ClientProperty;
@@ -23,6 +23,9 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
+
 import java.util.List;
 
 @Configuration
@@ -50,10 +53,10 @@ public class SecurityConfiguration {
         final OAuth2ClientProperty clientProperty = applicationProperty.getOauth2Google();
         // /oauth2/authorization/google
         return CommonOAuth2Provider.GOOGLE.getBuilder("google")
-                       .clientId(clientProperty.getClientId())
-                       .clientSecret(clientProperty.getClientSecret())
-                       .scope(clientProperty.getScope().split(","))
-                       .build();
+                .clientId(clientProperty.getClientId())
+                .clientSecret(clientProperty.getClientSecret())
+                .scope(clientProperty.getScope().split(","))
+                .build();
     }
 
     @Bean
@@ -72,9 +75,9 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CookiePreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
-                                                                           final UserService userService) {
-        CookiePreAuthenticationFilter filter = new CookiePreAuthenticationFilter(userService);
+    public TokenPreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
+                                                                          final UserService userService) {
+        TokenPreAuthenticationFilter filter = new TokenPreAuthenticationFilter(userService);
         filter.setAuthenticationManager(new ProviderManager(List.of(preAuthenticationProvider)));
         return filter;
     }
@@ -84,5 +87,14 @@ public class SecurityConfiguration {
         PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
         provider.setPreAuthenticatedUserDetailsService(userService);
         return provider;
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        final DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        serializer.setCookieName("JSESSIONID");
+        serializer.setCookieMaxAge(60 * 60 * 24 * 7);
+        serializer.setUseBase64Encoding(false);
+        return serializer;
     }
 }

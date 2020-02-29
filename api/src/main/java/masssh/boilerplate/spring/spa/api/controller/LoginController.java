@@ -1,12 +1,9 @@
 package masssh.boilerplate.spring.spa.api.controller;
 
-import static org.springframework.http.HttpStatus.*;
-
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import masssh.boilerplate.spring.spa.api.service.CookieService;
 import masssh.boilerplate.spring.spa.api.service.UserService;
-import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.response.BaseResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class LoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/api/login")
-    public ResponseEntity<LoginResponse> login(final HttpServletResponse response,
+    public ResponseEntity<LoginResponse> login(final HttpServletRequest request,
                                                @Valid @RequestBody final LoginRequest loginRequest,
                                                final BindingResult bindingResult) {
         final String email = loginRequest.getEmail();
@@ -50,11 +49,11 @@ public class LoginController {
         // refresh accessToken
         userService.refreshAccessToken(userRow);
 
-        // set cookie
-        final UserToken userToken = new UserToken(userRow.getUserId(), userRow.getAccessToken());
-        Optional.ofNullable(userService.encodeUserToken(userToken)).ifPresent(token -> cookieService.setId(response, token));
-
-        return ResponseEntity.ok(new LoginResponse(OK.value(), "Login successfully", userRow.getAccessToken(), userRow.getRole()));
+        return ResponseEntity.ok(new LoginResponse(OK.value(),
+                "Login successfully",
+                userRow.getUserId(),
+                userRow.getAccessToken(),
+                userRow.getRole()));
     }
 
     @Data
@@ -74,6 +73,7 @@ public class LoginController {
     private static final class LoginResponse extends BaseResponse {
         private final int status;
         private final String message;
+        private final String userId;
         private final String accessToken;
         private final String role;
     }

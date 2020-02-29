@@ -12,6 +12,7 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,8 @@ import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
+import static masssh.boilerplate.spring.spa.api.security.Roles.ROLE_USER;
 
 
 @Profile(value = "local")
@@ -53,7 +56,7 @@ public class LocalOnlyController {
                 new UserRow(null,
                         null,
                         request.getName(),
-                        Roles.ROLE_USER,
+                        ROLE_USER,
                         request.getEmail(),
                         Locale.JAPAN.toLanguageTag(),
                         passwordEncoder.encode(request.getPassword()),
@@ -69,7 +72,7 @@ public class LocalOnlyController {
                 new UserRow(null,
                         null,
                         "user" + uid,
-                        Roles.ROLE_USER,
+                        ROLE_USER,
                         uid + "@example.com",
                         Locale.JAPAN.toLanguageTag(),
                         passwordEncoder.encode("12345678"),

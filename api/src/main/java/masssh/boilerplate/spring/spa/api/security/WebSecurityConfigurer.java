@@ -21,7 +21,7 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
     private final RestAuthenticationFailureHandler restAuthenticationFailureHandler;
     private final OpenIdUserService openIdUserService;
-    private final CookiePreAuthenticationFilter cookiePreAuthenticationFilter;
+    private final TokenPreAuthenticationFilter tokenPreAuthenticationFilter;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -31,12 +31,19 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         }
 
         http.authorizeRequests()
-                .antMatchers("/", "/error", "/api/login", "/api/user/add", "/favicon.ico", "/oauth2/**", "/actuator/**").permitAll()
+                .antMatchers("/",
+                        "/error",
+                        "/api/login",
+                        "/api/user/add",
+                        "/favicon.ico",
+                        "/oauth2/**",
+                        "/actuator/**"
+                ).permitAll()
                 .anyRequest()
                 .authenticated();
 
         // Authorization with access token in HTTP Header
-        http.addFilter(cookiePreAuthenticationFilter);
+        http.addFilter(tokenPreAuthenticationFilter);
 
         // Login API
         http.formLogin().disable();
@@ -73,7 +80,7 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource);
 //        http.cors().disable();
 
-        http.sessionManagement().disable();
+//        http.sessionManagement().disable();
 //        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
