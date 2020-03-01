@@ -2,7 +2,6 @@ package masssh.boilerplate.spring.spa.api.security;
 
 import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.spa.api.service.EnvironmentService;
-import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,7 +15,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-    private final ApplicationProperty applicationProperty;
     private final EnvironmentService environmentService;
     private final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
     private final RestAuthenticationFailureHandler restAuthenticationFailureHandler;
@@ -79,9 +77,6 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         http.cors().configurationSource(corsConfigurationSource);
 //        http.cors().disable();
-
-//        http.sessionManagement().disable();
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 }

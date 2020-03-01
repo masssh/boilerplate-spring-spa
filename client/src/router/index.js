@@ -14,19 +14,19 @@ const routes = [
     }
   },
   {
-    path: '/public',
-    name: 'Public',
+    path: '/signin',
+    name: 'SignIn',
     component: () =>
-      import(/* webpackChunkName: "public" */ '../views/Public.vue'),
+      import(/* webpackChunkName: "secret" */ '../views/SignIn.vue'),
     meta: {
       isPublic: true
     }
   },
   {
-    path: '/secret',
-    name: 'Secret',
+    path: '/dashboard',
+    name: 'Dashboard',
     component: () =>
-      import(/* webpackChunkName: "secret" */ '../views/Secret.vue')
+      import(/* webpackChunkName: "secret" */ '../views/Dashboard.vue')
   },
   {
     path: '/error',
@@ -54,6 +54,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const params = new URLSearchParams(window.location.search)
+  if (params.has('token')) {
+    Store.dispatch('token', { encodedToken: params.get('token') })
+  }
   if (
     to.matched.some((page) => page.meta.isPublic) ||
     Store.state.accessToken

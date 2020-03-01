@@ -2,7 +2,6 @@ package masssh.boilerplate.spring.spa.api.controller;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import masssh.boilerplate.spring.spa.api.service.CookieService;
 import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.model.response.BaseResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -27,12 +25,11 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class LoginController {
     private final UserService userService;
-    private final CookieService cookieService;
     private final PasswordEncoder passwordEncoder;
 
+
     @PostMapping("/api/login")
-    public ResponseEntity<LoginResponse> login(final HttpServletRequest request,
-                                               @Valid @RequestBody final LoginRequest loginRequest,
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody final LoginRequest loginRequest,
                                                final BindingResult bindingResult) {
         final String email = loginRequest.getEmail();
         final String password = loginRequest.getPassword();

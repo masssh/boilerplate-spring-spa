@@ -3,7 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/public">Public</router-link> |
-      <router-link to="/secret">Secret</router-link>
+      <router-link to="/dashboard">Dashboard</router-link> |
+      <router-link to="/signin">Sign In</router-link>
     </div>
     <router-view />
   </div>

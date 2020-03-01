@@ -1,49 +1,49 @@
 config:
-  mysql:
-    jdbc-url: jdbc:mysql://localhost:3306/local
-    username: mysqluser
-    password: mysqluser
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    pool-name: master
-    minimum-idle: 15
-    maximum-pool-size: 15
-    leak-detection-threshold: 0 # disabled
-  redis:
-    host: 127.0.0.1
-    port: 7001
-  elasticsearch:
-    host: 127.0.0.1
-    port: 9300
-    cluster-name: docker-cluster
-  oauth2-google:
-    client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
-    client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
-    scope: openid,email,profile
-  security:
-    allow-origin: http://localhost:8070
-    login-success: http://localhost:8070/home
+    mysql:
+        jdbc-url: jdbc:mysql://localhost:3306/local
+        username: mysqluser
+        password: mysqluser
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        pool-name: master
+        minimum-idle: 15
+        maximum-pool-size: 15
+        leak-detection-threshold: 0 # disabled
+    redis:
+        host: 127.0.0.1
+        port: 7001
+    elasticsearch:
+        host: 127.0.0.1
+        port: 9300
+        cluster-name: docker-cluster
+    oauth2-google:
+        client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+        client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+        scope: openid,email,profile
+    security:
+        allow-origin: http://localhost:8888
+        login-success: http://localhost:8888/dashboard
 
 management:
-  endpoints:
-    web.exposure.include: '*'
-  endpoint:
-    health.show-details: ALWAYS
-  spring.boot.admin.client:
-    url: http://localhost:8090/
-    username: adminuser
-    password: adminuser
-    instance:
-      name: api
-      service-base-url: http://host.docker.internal:8080/
-      prefer-ip: false
-      metadata:
-        user:
-          name: adminuser
-          password: adminuser
+    endpoints:
+        web.exposure.include: '*'
+    endpoint:
+        health.show-details: ALWAYS
+    spring.boot.admin.client:
+        url: http://localhost:8090/
+        username: adminuser
+        password: adminuser
+        instance:
+            name: api
+            service-base-url: http://host.docker.internal:8080/
+            prefer-ip: false
+            metadata:
+                user:
+                    name: adminuser
+                    password: adminuser
 
 spring:
-  security:
-    user:
-      name: securityuser
-      password: securityuser
+    security:
+        user:
+            name: securityuser
+            password: securityuser
 

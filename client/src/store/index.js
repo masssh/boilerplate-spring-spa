@@ -10,7 +10,7 @@ export default new Vuex.Store({
     role: null
   },
   mutations: {
-    login(state, payload) {
+    setToken(state, payload) {
       state.userId = payload.userId
       state.accessToken = payload.accessToken
       state.role = payload.role
@@ -24,16 +24,20 @@ export default new Vuex.Store({
       })
       if (response.status === 200) {
         const { userId, accessToken, role } = response.data
-        commit('login', {
+        commit('setToken', {
           userId: userId,
           accessToken: accessToken,
           role: role
         })
       }
     },
-    async test() {
-      const response = await Vue.prototype.$axios.get('/api/test')
-      console.log(response)
+    async token({ commit }, { encodedToken }) {
+      const { userId, accessToken, role } = JSON.parse(atob(encodedToken))
+      commit('setToken', {
+        userId: userId,
+        accessToken: accessToken,
+        role: role
+      })
     }
   },
   modules: {}
