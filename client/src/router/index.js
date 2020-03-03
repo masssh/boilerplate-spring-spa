@@ -15,7 +15,7 @@ const routes = [
   },
   {
     path: '/signin',
-    name: 'SignIn',
+    name: 'Sign In',
     component: () =>
       import(/* webpackChunkName: "secret" */ '../views/SignIn.vue'),
     meta: {
@@ -62,8 +62,10 @@ router.beforeEach((to, from, next) => {
     to.matched.some((page) => page.meta.isPublic) ||
     Store.state.accessToken
   ) {
+    Store.dispatch('setTitle', { title: to.name })
     next()
   } else {
+    Store.dispatch('setTitle', { title: 'Home' })
     next('/')
   }
 })

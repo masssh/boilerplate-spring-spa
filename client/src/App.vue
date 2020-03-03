@@ -1,21 +1,47 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/public">Public</router-link> |
-      <router-link to="/dashboard">Dashboard</router-link> |
-      <router-link to="/signin">Sign In</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app id="app">
+    <v-app-bar app dense>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <router-link to="/signin">
+        <v-btn>Sing In</v-btn>
+      </router-link>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-list-item>
+        <v-list-item-content>Sample</v-list-item-content>
+      </v-list-item>
+    </v-navigation-drawer>
+
+    <v-content>
+      <v-container>
+        <router-view />
+      </v-container>
+    </v-content>
+
+    <v-footer>
+      <v-spacer></v-spacer>
+      <div>&copy; {{ new Date().getFullYear() }}</div>
+    </v-footer>
+  </v-app>
 </template>
+
+<script>
+export default {
+  data: function() {
+    return {
+      drawer: false,
+      title: this.$store.state.title
+    }
+  }
+}
+</script>
 
 <style lang="stylus">
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
+a
+  text-decoration : none
 </style>

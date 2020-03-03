@@ -1,6 +1,5 @@
 <template>
   <div class="signIn">
-    <h1><font-awesome-icon icon="user-circle" /> Sign in</h1>
     <SignInWithGoogle />
   </div>
 </template>

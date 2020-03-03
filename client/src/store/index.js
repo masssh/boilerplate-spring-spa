@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    title: null,
     userId: null,
     accessToken: null,
     role: null
   },
   mutations: {
+    setTitle(state, payload) {
+      state.title = payload.title
+    },
     setToken(state, payload) {
       state.userId = payload.userId
       state.accessToken = payload.accessToken
@@ -17,6 +21,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async setTitle({ commit }, { title }) {
+      commit('setTitle', { title: title })
+    },
     async login({ commit }, { email, password }) {
       const response = await Vue.prototype.$axios.post('/api/login', {
         email: email,

@@ -45,7 +45,6 @@ class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
         userRow = userRowOptional.get();
         userService.refreshAccessToken(userRow);
-        final String accessToken = userRow.getAccessToken();
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
