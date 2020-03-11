@@ -1,5 +1,6 @@
 <template>
-  <div class="dashboard">
+  <v-container class="dashboard">
     <h1>This is dashboard page</h1>
-  </div>
+  </v-container>
 </template>
+<style scoped></style>

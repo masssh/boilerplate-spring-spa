@@ -1,7 +1,5 @@
 package masssh.boilerplate.spring.spa.api.controller;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +28,9 @@ import javax.validation.constraints.NotEmpty;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/api/user/add")
-    public ResponseEntity<SuccessResponse> addUser(@Valid @RequestBody final UserAddRequest request,
-                                                   final BindingResult bindingResult) {
+    @PostMapping("/api/signUp")
+    public ResponseEntity<SuccessResponse> signUp(@Valid @RequestBody final SingUpRequest request,
+                                                  final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
         }
@@ -43,7 +44,7 @@ public class UserController {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class UserAddRequest {
+    private static class SingUpRequest {
         @NotEmpty
         private String userName;
         @Min(8)

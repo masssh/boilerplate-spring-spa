@@ -32,7 +32,7 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/error",
                         "/api/login",
-                        "/api/user/add",
+                        "/api/signUp",
                         "/favicon.ico",
                         "/oauth2/**",
                         "/actuator/**"

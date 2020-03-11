@@ -38,6 +38,21 @@ export default new Vuex.Store({
         })
       }
     },
+    async signUp({ commit }, { userName, email, password }) {
+      const response = await Vue.prototype.$axios.post('/api/signUp', {
+        userName: userName,
+        email: email,
+        password: password
+      })
+      if (response.status === 200) {
+        const { userId, accessToken, role } = response.data
+        commit('setToken', {
+          userId: userId,
+          accessToken: accessToken,
+          role: role
+        })
+      }
+    },
     async token({ commit }, { encodedToken }) {
       const { userId, accessToken, role } = JSON.parse(atob(encodedToken))
       commit('setToken', {

@@ -14,10 +14,19 @@ const routes = [
     }
   },
   {
-    path: '/signin',
+    path: '/signIn',
     name: 'Sign In',
     component: () =>
       import(/* webpackChunkName: "secret" */ '../views/SignIn.vue'),
+    meta: {
+      isPublic: true
+    }
+  },
+  {
+    path: '/signUp',
+    name: 'Sign Up',
+    component: () =>
+      import(/* webpackChunkName: "secret" */ '../views/SignUp.vue'),
     meta: {
       isPublic: true
     }

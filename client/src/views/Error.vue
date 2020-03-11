@@ -1,6 +1,7 @@
 <template>
-  <div class="error">
+  <v-container class="error">
     <h1>This is error page</h1>
-  </div>
+  </v-container>
 </template>
 <script></script>
+<style lang="stylus" scoped></style>

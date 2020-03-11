@@ -1,16 +1,12 @@
 <template>
-  <div class="home">
+  <v-container class="home">
     <h1>This is home page</h1>
-    <button @click="test">test</button>
-  </div>
+  </v-container>
 </template>
 <script>
 export default {
   components: {},
-  methods: {
-    test() {
-      this.$store.dispatch('test')
-    }
-  }
+  methods: {}
 }
 </script>
+<style lang="stylus" scoped></style>
