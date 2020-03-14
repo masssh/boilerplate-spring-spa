@@ -21,7 +21,7 @@ config:
         scope: openid,email,profile
     security:
         allow-origin: http://localhost:8888
-        login-success: http://localhost:8888/dashboard
+        login-success: http://localhost:8888/#/dashboard
 
 management:
     endpoints:

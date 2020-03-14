@@ -1,82 +1,33 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Store from '@/store/index.js'
+
+import routes from './routes'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
-    meta: {
-      isPublic: true
+export default function({ store }) {
+  const Router = new VueRouter({
+    scrollBehavior: () => ({ x: 0, y: 0 }),
+    routes,
+    mode: process.env.VUE_ROUTER_MODE,
+    base: process.env.VUE_ROUTER_BASE
+  })
+  Router.beforeEach((to, from, next) => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('token')) {
+      store.dispatch('token', { encodedToken: params.get('token') })
     }
-  },
-  {
-    path: '/signIn',
-    name: 'Sign In',
-    component: () =>
-      import(/* webpackChunkName: "secret" */ '../views/SignIn.vue'),
-    meta: {
-      isPublic: true
+    if (
+      to.matched.some((page) => page.meta.public) ||
+      store.state.accessToken
+    ) {
+      store.dispatch('setTitle', { title: to.name })
+      next()
+    } else {
+      store.dispatch('setTitle', { title: 'Home' })
+      next('/')
     }
-  },
-  {
-    path: '/signUp',
-    name: 'Sign Up',
-    component: () =>
-      import(/* webpackChunkName: "secret" */ '../views/SignUp.vue'),
-    meta: {
-      isPublic: true
-    }
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () =>
-      import(/* webpackChunkName: "secret" */ '../views/Dashboard.vue')
-  },
-  {
-    path: '/error',
-    name: 'Error',
-    component: () =>
-      import(/* webpackChunkName: "error" */ '../views/Error.vue'),
-    meta: {
-      isPublic: true
-    }
-  },
-  {
-    path: '*',
-    component: () =>
-      import(/* webpackChunkName: "error" */ '../views/Error.vue'),
-    meta: {
-      isPublic: true
-    }
-  }
-]
+  })
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
-
-router.beforeEach((to, from, next) => {
-  const params = new URLSearchParams(window.location.search)
-  if (params.has('token')) {
-    Store.dispatch('token', { encodedToken: params.get('token') })
-  }
-  if (
-    to.matched.some((page) => page.meta.isPublic) ||
-    Store.state.accessToken
-  ) {
-    Store.dispatch('setTitle', { title: to.name })
-    next()
-  } else {
-    Store.dispatch('setTitle', { title: 'Home' })
-    next('/')
-  }
-})
-
-export default router
+  return Router
+}

@@ -1,31 +1,23 @@
 <template>
-  <v-container fluid class="signInWithEmail">
-    <v-form ref="form">
-      <v-row>
-        <v-text-field
-          v-model="email"
-          label="Email"
-          :rules="emailRules"
-          :validate-on-blur="true"
-          ur="true"
-        ></v-text-field>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="pass"
-          label="Password"
-          type="password"
-          :rules="passRules"
-          :validate-on-blur="true"
-        ></v-text-field>
-      </v-row>
-      <v-row justify="center">
-        <v-btn color="primary" class="no-text-transform" @click="login"
-          >Sign in with Email</v-btn
-        >
-      </v-row>
-    </v-form>
-  </v-container>
+  <q-form class="q-gutter-md center">
+    <q-input
+      v-model="email"
+      label="* Email"
+      lazy-rules
+      :rules="[
+        (v) => !!v || 'Email is required',
+        (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+      ]"
+    />
+    <q-input
+      v-model="password"
+      label="* Password"
+      type="password"
+      lazy-rules
+      :rules="[(v) => !!v || 'Password is required']"
+    />
+    <q-btn @click="signIn" label="Sign In" no-caps />
+  </q-form>
 </template>
 <script>
 export default {
@@ -33,26 +25,21 @@ export default {
   data: function() {
     return {
       email: null,
-      emailRules: [
-        (v) => !!v || 'Email is required',
-        (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ],
-      pass: null,
-      passRules: [(v) => !!v || 'Password is required']
+      password: null
     }
   },
   methods: {
-    login() {
-      const { email, pass } = this
-      this.$store.dispatch('login', {
+    signIn() {
+      const { email, password } = this
+      this.$store.dispatch('signIn', {
         email: email,
-        password: pass
+        password: password
       })
     }
   }
 }
 </script>
-<style lang="stylus" scoped>
-.no-text-transform
-  text-transform : none
+<style lang="sass" scoped>
+.center
+  text-align: center
 </style>
