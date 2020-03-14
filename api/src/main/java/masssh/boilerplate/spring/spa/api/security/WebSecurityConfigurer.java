@@ -31,7 +31,8 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/",
                         "/error",
-                        "/api/login",
+                        "/api/token",
+                        "/api/signIn",
                         "/api/signUp",
                         "/favicon.ico",
                         "/oauth2/**",
