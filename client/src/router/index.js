@@ -1,33 +1,50 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 import routes from './routes'
 
 Vue.use(VueRouter)
 
 export default function({ store }) {
-  const Router = new VueRouter({
+  const router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
-  Router.beforeEach((to, from, next) => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('token')) {
-      store.dispatch('token', { encodedToken: params.get('token') })
-    }
-    if (
-      to.matched.some((page) => page.meta.public) ||
-      store.state.accessToken
-    ) {
-      store.dispatch('setTitle', { title: to.name })
-      next()
-    } else {
+
+  router.beforeEach((to, from, next) => {
+    const validate = () => {
+      const { userId } = store.state
+      if (to.path === '/' && userId) {
+        next({ path: '/dashboard' })
+        return
+      }
+      if (to.meta.public || userId) {
+        store.dispatch('setTitle', { title: to.name })
+        next()
+        return
+      }
       store.dispatch('setTitle', { title: 'Home' })
       next('/')
     }
+    const onSuccess = (userId) => {
+      if (to.path === '/' && userId) {
+        next('/dashboard')
+      } else {
+        validate()
+      }
+    }
+
+    const { initialized } = store.state
+    if (!initialized) {
+      store.dispatch('initializeToken', {
+        onSuccess: onSuccess,
+        onError: validate
+      })
+      return
+    }
+    validate()
   })
 
-  return Router
+  return router
 }
