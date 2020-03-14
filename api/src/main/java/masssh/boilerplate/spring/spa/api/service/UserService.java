@@ -1,7 +1,5 @@
 package masssh.boilerplate.spring.spa.api.service;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,26 +12,28 @@ import masssh.boilerplate.spring.spa.dao.service.UserCreator;
 import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
+public class UserService implements UserDetailsService {
     private final UserDao userDao;
     private final UserCreator userCreator;
     private final OAuth2GoogleDao oAuth2GoogleDao;
@@ -41,15 +41,11 @@ public class UserService implements AuthenticationUserDetailsService<PreAuthenti
     private final ObjectMapper objectMapper;
 
     @Override
-    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
-        final String userId = (String) token.getPrincipal();
-        final String accessToken = (String) token.getCredentials();
-        final Optional<UserRow> userOptional = userDao.single(userId);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        final Optional<UserRow> userOptional = userDao.singleByEmail(email);
         if (userOptional.isPresent()) {
             final UserRow user = userOptional.get();
-            if (validateAccessToken(user, accessToken)) {
-                return new ApplicationUserDetails(user);
-            }
+            return new ApplicationUserDetails(user);
         }
         throw new UsernameNotFoundException("user not found.");
     }
@@ -60,6 +56,10 @@ public class UserService implements AuthenticationUserDetailsService<PreAuthenti
 
     public Optional<UserRow> loadUserByUserId(final String userId) {
         return userDao.single(userId);
+    }
+
+    public Optional<UserRow> loadUserBySubject(final String subject) {
+        return userDao.singleBySubject(subject);
     }
 
     public void registerUser(final String userName, final String password, final String email, final Locale locale) {
@@ -116,7 +116,7 @@ public class UserService implements AuthenticationUserDetailsService<PreAuthenti
 
     private void updateOAuth2Google(final OidcUser oidcUser) {
         final OAuth2GoogleRow oAuth2GoogleRow = oAuth2GoogleDao.single(oidcUser.getSubject())
-                                                        .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR));
         oAuth2GoogleRow.setIdToken(oidcUser.getIdToken().getTokenValue());
         oAuth2GoogleRow.setAccessToken(oidcUser.getAccessTokenHash());
         oAuth2GoogleRow.setIssuedAt(oidcUser.getIssuedAt().getEpochSecond());
@@ -177,4 +177,5 @@ public class UserService implements AuthenticationUserDetailsService<PreAuthenti
         }
         return null;
     }
+
 }

@@ -1,13 +1,10 @@
 package masssh.boilerplate.spring.spa.api.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.api.security.TokenPreAuthenticationFilter;
-import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.OAuth2ClientProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +19,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
@@ -74,20 +70,20 @@ public class SecurityConfiguration {
         return new DefaultAuthorizationCodeTokenResponseClient();
     }
 
-    @Bean
-    public TokenPreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
-                                                                          final UserService userService) {
-        TokenPreAuthenticationFilter filter = new TokenPreAuthenticationFilter(userService);
-        filter.setAuthenticationManager(new ProviderManager(List.of(preAuthenticationProvider)));
-        return filter;
-    }
+//    @Bean
+//    public TokenPreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
+//                                                                          final UserService userService) {
+//        TokenPreAuthenticationFilter filter = new TokenPreAuthenticationFilter(userService);
+//        filter.setAuthenticationManager(new ProviderManager(List.of(preAuthenticationProvider)));
+//        return filter;
+//    }
 
-    @Bean
-    public PreAuthenticatedAuthenticationProvider preAuthenticationProvider(final UserService userService) {
-        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
-        provider.setPreAuthenticatedUserDetailsService(userService);
-        return provider;
-    }
+//    @Bean
+//    public PreAuthenticatedAuthenticationProvider preAuthenticationProvider(final UserService userService) {
+//        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
+//        provider.setPreAuthenticatedUserDetailsService(userService);
+//        return provider;
+//    }
 
     @Bean
     public CookieSerializer cookieSerializer() {

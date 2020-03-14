@@ -9,6 +9,7 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +39,15 @@ public class LoginController {
             throw new ResponseStatusException(NOT_FOUND);
         }
         final Authentication authentication = (Authentication) principal;
-        final ApplicationUserDetails userDetails = (ApplicationUserDetails) authentication.getPrincipal();
-        final UserRow userRow = userDetails.getUserRow();
+        final UserRow userRow;
+        if (authentication.getPrincipal() instanceof ApplicationUserDetails) {
+            userRow = ((ApplicationUserDetails) authentication.getPrincipal()).getUserRow();
+        } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
+            final String subject = ((DefaultOidcUser) authentication.getPrincipal()).getSubject();
+            userRow = userService.loadUserBySubject(subject).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        } else {
+            throw new ResponseStatusException(NOT_FOUND);
+        }
 
         // refresh accessToken
         userService.refreshAccessToken(userRow);
