@@ -19,8 +19,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.session.web.http.CookieSerializer;
-import org.springframework.session.web.http.DefaultCookieSerializer;
 
 import java.util.List;
 
@@ -42,12 +40,9 @@ public class SecurityConfiguration {
     /**
      * authorization endpoint is below:
      * /oauth2/authorization/google
-     *
-     * @return
      */
     private ClientRegistration googleClientRegistration() {
         final OAuth2ClientProperty clientProperty = applicationProperty.getOauth2Google();
-        // /oauth2/authorization/google
         return CommonOAuth2Provider.GOOGLE.getBuilder("google")
                 .clientId(clientProperty.getClientId())
                 .clientSecret(clientProperty.getClientSecret())
@@ -68,29 +63,5 @@ public class SecurityConfiguration {
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
         return new DefaultAuthorizationCodeTokenResponseClient();
-    }
-
-//    @Bean
-//    public TokenPreAuthenticationFilter requestHeaderAuthenticationFilter(final PreAuthenticatedAuthenticationProvider preAuthenticationProvider,
-//                                                                          final UserService userService) {
-//        TokenPreAuthenticationFilter filter = new TokenPreAuthenticationFilter(userService);
-//        filter.setAuthenticationManager(new ProviderManager(List.of(preAuthenticationProvider)));
-//        return filter;
-//    }
-
-//    @Bean
-//    public PreAuthenticatedAuthenticationProvider preAuthenticationProvider(final UserService userService) {
-//        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
-//        provider.setPreAuthenticatedUserDetailsService(userService);
-//        return provider;
-//    }
-
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        final DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("JSESSIONID");
-        serializer.setCookieMaxAge(60 * 60 * 24 * 7);
-        serializer.setUseBase64Encoding(false);
-        return serializer;
     }
 }
