@@ -1,21 +1,6 @@
 <template>
   <q-form ref="form" class="q-gutter-md center">
     <q-input
-      v-model="userName"
-      label="* User Name"
-      lazy-rules
-      :rules="[(v) => !!v || 'User Name is required']"
-    />
-    <q-input
-      v-model="email"
-      label="* Email"
-      lazy-rules
-      :rules="[
-        (v) => !!v || 'Email is required',
-        (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ]"
-    />
-    <q-input
       v-model="password"
       label="* Password"
       type="password"
@@ -32,7 +17,7 @@
         (v) => this.password === v || 'Password not matched'
       ]"
     />
-    <q-btn @click="signUp" label="Sign Up" no-caps />
+    <q-btn @click="signUp" label="Update" no-caps />
   </q-form>
 </template>
 <script>
@@ -40,23 +25,18 @@ export default {
   components: {},
   data: function() {
     return {
-      userName: null,
-      email: null,
       password: null,
       passwordConfirm: null
     }
   },
   methods: {
     signUp() {
-      const { userName, email, password } = this
+      const { password } = this
       if (this.$refs.form.validate()) {
-        this.$store
-          .dispatch('signUp', {
-            userName: userName,
-            email: email,
-            password: password
-          })
-          .then(() => this.$router.push('/dashboard'))
+        this.$store.dispatch('updateUser', {
+          password: password,
+          router: this.$router
+        })
       }
     }
   }

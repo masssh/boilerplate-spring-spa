@@ -26,9 +26,9 @@
         </q-toolbar-title>
 
         <div>
-          <q-btn v-if="!userId" label="Sign In" to="/signIn" no-caps flat />
-          <q-btn v-if="!userId" label="Sign Up" to="/signUp" no-caps flat />
-          <q-btn v-if="userId" icon="account_circle" flat round>
+          <q-btn v-if="!login" label="Sign In" to="/signIn" no-caps flat />
+          <q-btn v-if="!login" label="Sign Up" to="/signUp" no-caps flat />
+          <q-btn v-if="login" icon="account_circle" flat round>
             <q-menu
               :offset="[0, 5]"
               transition-show="scale"
@@ -36,7 +36,7 @@
               square
             >
               <q-list style="min-width: 300px">
-                <q-item to="/account" clickable v-close-popup>
+                <q-item to="/user" clickable v-close-popup>
                   <q-item-section avatar>
                     <q-icon name="settings" size="sm" />
                   </q-item-section>
@@ -71,7 +71,7 @@ export default {
   name: 'MainLayout',
   computed: mapState({
     title: (state) => state.title,
-    userId: (state) => state.userId
+    login: (state) => state.user.login
   }),
   data() {
     return {
@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout', { router: this.$router })
+      this.$store.dispatch('logout').then(() => this.$router.push('/'))
     }
   }
 }

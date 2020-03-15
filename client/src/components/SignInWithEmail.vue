@@ -16,7 +16,7 @@
       lazy-rules
       :rules="[(v) => !!v || 'Password is required']"
     />
-    <q-btn @click="signIn" label="Sign In" no-caps />
+    <q-btn @click="login" label="Sign In" no-caps />
   </q-form>
 </template>
 <script>
@@ -29,11 +29,12 @@ export default {
     }
   },
   methods: {
-    signIn() {
+    login() {
       const { email, password } = this
-      this.$store.dispatch('signIn', {
+      this.$store.dispatch('login', {
         email: email,
-        password: password
+        password: password,
+        router: this.$router
       })
     }
   }

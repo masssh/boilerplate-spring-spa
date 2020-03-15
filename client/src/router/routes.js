@@ -35,6 +35,21 @@ const routes = [
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('pages/Dashboard.vue')
+      },
+      {
+        path: 'user',
+        name: 'User Profile',
+        component: () => import('pages/UserProfile.vue')
+      },
+      {
+        path: 'user/profile/edit',
+        name: 'User Profile Edit',
+        component: () => import('pages/UserProfileEdit.vue')
+      },
+      {
+        path: 'user/password/edit',
+        name: 'User Password Edit',
+        component: () => import('pages/UserPasswordEdit.vue')
       }
     ]
   }

@@ -1,6 +1,8 @@
 package masssh.boilerplate.spring.spa.model.response;
 
-@SuppressWarnings("WeakerAccess")
+import lombok.Data;
+
+@Data
 abstract public class BaseResponse {
     int status;
     String message;

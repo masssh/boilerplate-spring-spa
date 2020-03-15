@@ -3,6 +3,7 @@ package masssh.boilerplate.spring.spa.dao;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
+
 import java.util.Optional;
 
 @Mapper
@@ -17,7 +18,7 @@ public interface UserDao {
     void update(UserRow userRow);
 
     @Delete("DELETE FROM user WHERE userId = #{userId}")
-    void delete(@Param("userId") String userId);
+    boolean delete(@Param("userId") String userId);
 
     @Select("SELECT * FROM user WHERE userName = #{userName}")
     Optional<UserRow> singleByUserName(@Param("userName") String userName);
@@ -39,16 +40,16 @@ public interface UserDao {
     class SqlProvider implements ProviderMethodResolver {
         public String singleOAuth2Detail(@Param("subject") String subject) {
             return "" +
-                           "SELECT " +
-                           "  user.*, " +
-                           "  oauth2_google.subject AS oauth2_google_subject, " +
-                           "  oauth2_google.idToken AS oauth2_google_idToken, " +
-                           "  oauth2_google.accessToken AS oauth2_google_accessToken, " +
-                           "  oauth2_google.issuedAt AS oauth2_google_issuedAt, " +
-                           "  oauth2_google.expiresAt AS oauth2_google_expiresAt " +
-                           "FROM user " +
-                           "JOIN oauth2_google ON user.googleSubject = oauth2_google.subject " +
-                           "WHERE user.googleSubject = #{subject}";
+                    "SELECT " +
+                    "  user.*, " +
+                    "  oauth2_google.subject AS oauth2_google_subject, " +
+                    "  oauth2_google.idToken AS oauth2_google_idToken, " +
+                    "  oauth2_google.accessToken AS oauth2_google_accessToken, " +
+                    "  oauth2_google.issuedAt AS oauth2_google_issuedAt, " +
+                    "  oauth2_google.expiresAt AS oauth2_google_expiresAt " +
+                    "FROM user " +
+                    "JOIN oauth2_google ON user.googleSubject = oauth2_google.subject " +
+                    "WHERE user.googleSubject = #{subject}";
         }
     }
 }

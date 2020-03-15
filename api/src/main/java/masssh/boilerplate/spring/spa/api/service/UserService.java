@@ -12,18 +12,22 @@ import masssh.boilerplate.spring.spa.dao.service.UserCreator;
 import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,6 +66,20 @@ public class UserService implements UserDetailsService {
         return userDao.singleBySubject(subject);
     }
 
+    public Optional<UserRow> loadUserByPrincipal(final Principal principal) {
+        if (principal == null) {
+            return Optional.empty();
+        }
+        final Authentication authentication = (Authentication) principal;
+        if (authentication.getPrincipal() instanceof ApplicationUserDetails) {
+            return Optional.of(((ApplicationUserDetails) authentication.getPrincipal()).getUserRow());
+        } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
+            final String subject = ((DefaultOidcUser) authentication.getPrincipal()).getSubject();
+            return loadUserBySubject(subject);
+        }
+        return Optional.empty();
+    }
+
     public void registerUser(final String userName, final String password, final String email, final Locale locale) {
         createUser(userName, password, email, locale.toLanguageTag(), null);
     }
@@ -77,7 +95,7 @@ public class UserService implements UserDetailsService {
                 updateUser(userRow, oidcUser);
             } else {
                 createOAuth2Google(oidcUser);
-                userRow = createUser(oidcUser.getName(),
+                userRow = createUser(oidcUser.getClaim("name"),
                         null,
                         oidcUser.getEmail(),
                         oidcUser.getLocale(),
@@ -86,9 +104,20 @@ public class UserService implements UserDetailsService {
         } else {
             userRow = userRowOptional.get();
             updateOAuth2Google(oidcUser);
-            updateUser(userRow, oidcUser);
         }
         return userRow;
+    }
+
+    public String generatePasswordHash(final String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    @Transactional
+    public void deleteUser(final String userId) {
+        userDao.single(userId).ifPresent(userRow -> {
+            userDao.delete(userId);
+            Optional.ofNullable(userRow.getGoogleSubject()).ifPresent(oAuth2GoogleDao::delete);
+        });
     }
 
     private void createOAuth2Google(final OidcUser oidcUser) {
@@ -124,11 +153,11 @@ public class UserService implements UserDetailsService {
         oAuth2GoogleDao.update(oAuth2GoogleRow);
     }
 
+    public void updateUser(final UserRow userRow) {
+        userDao.update(userRow);
+    }
+
     private void updateUser(final UserRow userRow, final OidcUser oidcUser) {
-        userRow.setUserName(oidcUser.getName());
-        userRow.setEmail(oidcUser.getEmail());
-        userRow.setLocale(oidcUser.getLocale());
-        userRow.setAccessToken(generateAccessToken());
         userRow.setGoogleSubject(oidcUser.getSubject());
         userDao.update(userRow);
     }

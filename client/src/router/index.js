@@ -14,12 +14,12 @@ export default function({ store }) {
 
   router.beforeEach((to, from, next) => {
     const validate = () => {
-      const { userId } = store.state
-      if (to.path === '/' && userId) {
+      const { login } = store.state.user
+      if (to.path === '/' && login) {
         next({ path: '/dashboard' })
         return
       }
-      if (to.meta.public || userId) {
+      if (to.meta.public || login) {
         store.dispatch('setTitle', { title: to.name })
         next()
         return
