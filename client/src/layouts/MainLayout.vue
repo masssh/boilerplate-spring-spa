@@ -36,6 +36,16 @@
               square
             >
               <q-list style="min-width: 300px">
+                <q-item>
+                  <q-item-section avatar>
+                    <q-item-label>
+                      <q-icon name="account_circle" size="lg" class="q-ma-md" />
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ email }}</q-item-label>
+                  </q-item-section>
+                </q-item>
                 <q-item to="/user" clickable v-close-popup>
                   <q-item-section avatar>
                     <q-icon name="settings" size="sm" />
@@ -71,6 +81,7 @@ export default {
   name: 'MainLayout',
   computed: mapState({
     title: (state) => state.title,
+    email: (state) => state.user.email,
     login: (state) => state.user.login
   }),
   data() {

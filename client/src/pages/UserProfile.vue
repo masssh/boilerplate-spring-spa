@@ -4,7 +4,7 @@
       <div class="col-6">
         <q-card>
           <q-card-section>
-            <h5>Profile</h5>
+            <div class="text-h5 text-center q-my-lg">Profile</div>
             <q-list>
               <q-item>
                 <q-item-section>Email</q-item-section>

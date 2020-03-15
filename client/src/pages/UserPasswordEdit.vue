@@ -4,6 +4,7 @@
       <div class="col-6">
         <q-card>
           <q-card-section class="center">
+            <div class="text-h5 text-center q-my-lg">Change Password</div>
             <UpdateUserPassword />
           </q-card-section>
         </q-card>
