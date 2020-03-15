@@ -85,7 +85,7 @@ export default function() {
             console.debug('User not found')
           })
       },
-      async signUp({ dispatch }, { userName, email, password }) {
+      async signUp({ dispatch }, { userName, email, password, router }) {
         await Vue.prototype.$axios
           .post('/api/signUp', {
             userName: userName,
@@ -93,9 +93,10 @@ export default function() {
             password: password
           })
           .then(function() {
-            dispatch('getToken', {
-              onSuccess: () => {},
-              onError: () => {}
+            dispatch('login', {
+              email: email,
+              password: password,
+              router: router
             })
           })
           .catch(function() {

@@ -50,13 +50,12 @@ export default {
     signUp() {
       const { userName, email, password } = this
       if (this.$refs.form.validate()) {
-        this.$store
-          .dispatch('signUp', {
-            userName: userName,
-            email: email,
-            password: password
-          })
-          .then(() => this.$router.push('/dashboard'))
+        this.$store.dispatch('signUp', {
+          userName: userName,
+          email: email,
+          password: password,
+          router: this.$router
+        })
       }
     }
   }

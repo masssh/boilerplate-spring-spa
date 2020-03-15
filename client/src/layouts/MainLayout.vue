@@ -43,7 +43,8 @@
                     </q-item-label>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>{{ email }}</q-item-label>
+                    <q-item-label>{{ userName }}</q-item-label>
+                    <q-item-label caption>{{ email }}</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item to="/user" clickable v-close-popup>
@@ -81,8 +82,9 @@ export default {
   name: 'MainLayout',
   computed: mapState({
     title: (state) => state.title,
-    email: (state) => state.user.email,
-    login: (state) => state.user.login
+    login: (state) => state.user.login,
+    userName: (state) => state.user.userName,
+    email: (state) => state.user.email
   }),
   data() {
     return {
