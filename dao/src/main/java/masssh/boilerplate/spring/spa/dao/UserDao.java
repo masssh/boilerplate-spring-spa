@@ -11,7 +11,8 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE userId = #{userId}")
     Optional<UserRow> single(@Param("userId") String userId);
 
-    @Insert("INSERT INTO user VALUES ( #{userId}, #{userName}, #{role}, #{email}, #{locale}, #{passwordHash}, #{accessToken}, #{googleSubject} )")
+    @Insert("INSERT INTO user (userId, userName, role, email, locale, passwordHash, accessToken, googleSubject)" +
+            "VALUES ( #{userId}, #{userName}, #{role}, #{email}, #{locale}, #{passwordHash}, #{accessToken}, #{googleSubject} )")
     void create(UserRow userRow);
 
     @Update("UPDATE user SET userId=#{userId}, userName=#{userName}, role=#{role}, email=#{email}, locale=#{locale}, passwordHash=#{passwordHash}, accessToken=#{accessToken}, googleSubject=#{googleSubject} WHERE userId = #{userId}")

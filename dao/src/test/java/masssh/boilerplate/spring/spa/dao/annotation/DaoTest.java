@@ -1,22 +1,20 @@
 package masssh.boilerplate.spring.spa.dao.annotation;
 
 import masssh.boilerplate.spring.spa.dao.config.DatabaseConfiguration;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DatabaseConfiguration.class})
+@SpringBootTest(classes = {DatabaseConfiguration.class})
 @ComponentScan("masssh.boilerplate.spring.spa")
-@MybatisTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@EnableConfigurationProperties
+@Transactional
 public @interface DaoTest {
 }

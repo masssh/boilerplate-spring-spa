@@ -1,14 +1,15 @@
 package masssh.boilerplate.spring.spa.dao;
 
-import static org.assertj.core.api.Assertions.*;
-
 import masssh.boilerplate.spring.spa.dao.annotation.DaoTest;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 import java.util.Locale;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DaoTest
 class UserDaoTest {
@@ -18,11 +19,10 @@ class UserDaoTest {
     private OAuth2GoogleDao oAuth2GoogleDao;
 
     static UserRow createRow() {
-        return new UserRow(null, "userId", "userName", "roleUser", "email", Locale.JAPAN.toString(), "passwordHash", "accessToken", null);
+        return new UserRow(null, "userId", "userName", "roleUser", "email", Locale.JAPAN.toString(), "passwordHash", "accessToken", null, null, null);
     }
 
     @Test
-    @Transactional
     void crud() {
         assertThat(userDao.single("userId")).isEmpty();
         userDao.create(createRow());
@@ -35,6 +35,10 @@ class UserDaoTest {
         assertThat(userRow.getPasswordHash()).isEqualTo("passwordHash");
         assertThat(userRow.getAccessToken()).isEqualTo("accessToken");
         assertThat(userRow.getGoogleSubject()).isEqualTo(null);
+        final Instant createdAt = userRow.getCreatedAt();
+        final Instant updatedAt = userRow.getUpdatedAt();
+        assertThat(createdAt).isNotNull();
+        assertThat(updatedAt).isNotNull();
 
         userRow.setUserName("updated");
         userRow.setRole("updated");
@@ -51,13 +55,14 @@ class UserDaoTest {
         assertThat(userRow.getLocale()).isEqualTo("updated");
         assertThat(userRow.getPasswordHash()).isEqualTo("updated");
         assertThat(userRow.getAccessToken()).isEqualTo("updated");
+        assertThat(userRow.getCreatedAt()).isEqualTo(createdAt);
+        assertThat(userRow.getUpdatedAt()).isAfter(updatedAt);
 
         userDao.delete(userRow.getUserId());
         assertThat(userDao.single("userId")).isEmpty();
     }
 
     @Test
-    @Transactional
     void join() {
         final UserRow userRow = createRow();
         final OAuth2GoogleRow oAuth2GoogleRow = OAuth2GoogleDaoTest.createRow();

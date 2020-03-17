@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @ToString(exclude = {"email", "passwordHash", "accessToken"})
@@ -20,4 +22,6 @@ public class UserRow implements Serializable {
     private String passwordHash;
     private String accessToken;
     private String googleSubject;
+    private Instant createdAt;
+    private Instant updatedAt;
 }
