@@ -44,10 +44,24 @@ public class UserController {
 
     @PostMapping("/api/signUp")
     public ResponseEntity<SuccessResponse> signUp(@Valid @RequestBody final SingUpRequest request,
-                                                  final BindingResult bindingResult) {
+                                                  final BindingResult bindingResult,
+                                                  final Principal principal) {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
         }
+        {
+            final Optional<UserRow> userRow = userService.loadUserByPrincipal(principal);
+            if (userRow.isPresent()) {
+                throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
+            }
+        }
+        {
+            final Optional<UserRow> userRow = userService.loadUserByEmail(request.getEmail());
+            if (userRow.isPresent()) {
+                throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
+            }
+        }
+
         userService.registerUser(request.getUserName(),
                 request.getPassword(),
                 request.getEmail(),
