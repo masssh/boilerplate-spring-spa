@@ -46,4 +46,6 @@ spring:
         user:
             name: securityuser
             password: securityuser
-
+    mail:
+        host: localhost
+        port: 1025

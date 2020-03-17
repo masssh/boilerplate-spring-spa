@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import masssh.boilerplate.spring.spa.api.service.MailService;
 import masssh.boilerplate.spring.spa.dao.service.UserCreator;
 import masssh.boilerplate.spring.spa.model.response.SuccessResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
@@ -33,6 +34,7 @@ import static masssh.boilerplate.spring.spa.api.security.Roles.ROLE_USER;
 public class LocalOnlyController {
     private final UserCreator userCreator;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     @GetMapping("/local/success")
     public ResponseEntity<SuccessResponse> success() {
@@ -42,6 +44,12 @@ public class LocalOnlyController {
     @GetMapping("/local/not_found")
     public ResponseEntity<Object> notFound() {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/local/mail")
+    public ResponseEntity<SuccessResponse> mail() {
+        mailService.sendMail();
+        return ResponseEntity.ok(new SuccessResponse());
     }
 
     @GetMapping("/api/test")

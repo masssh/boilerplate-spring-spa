@@ -37,3 +37,6 @@ out/
 # Lombok
 **/lombok.config
 node_modules
+
+# secret
+secret.txt
