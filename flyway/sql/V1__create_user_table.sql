@@ -2,8 +2,8 @@ CREATE TABLE oauth2_google (
     subject VARCHAR(50) NOT NULL,
     idToken VARCHAR(1500) NOT NULL,
     accessToken VARCHAR(50) NOT NULL,
-    issuedAt bigint NOT NULL,
-    expiresAt bigint NOT NULL,
+    issuedAt DATETIME NOT NULL,
+    expiresAt DATETIME NOT NULL,
     PRIMARY KEY (subject)
 )
 ENGINE = InnoDB
@@ -26,3 +26,4 @@ CREATE TABLE user (
 ENGINE = InnoDB
 DEFAULT CHARSET = utf8mb4
 ;
+

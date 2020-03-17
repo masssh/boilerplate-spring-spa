@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @ToString(exclude = {"idToken", "accessToken"})
@@ -14,6 +16,6 @@ public class OAuth2GoogleRow implements Serializable {
     private String subject;
     private String idToken;
     private String accessToken;
-    private long issuedAt;
-    private long expiresAt;
+    private Instant issuedAt;
+    private Instant expiresAt;
 }

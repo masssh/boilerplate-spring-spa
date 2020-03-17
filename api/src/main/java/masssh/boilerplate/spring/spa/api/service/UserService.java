@@ -125,8 +125,8 @@ public class UserService implements UserDetailsService {
                 oidcUser.getSubject(),
                 oidcUser.getIdToken().getTokenValue(),
                 oidcUser.getAccessTokenHash(),
-                oidcUser.getIssuedAt().getEpochSecond(),
-                oidcUser.getExpiresAt().getEpochSecond());
+                oidcUser.getIssuedAt(),
+                oidcUser.getExpiresAt());
         oAuth2GoogleDao.create(oAuth2GoogleRow);
     }
 
@@ -148,8 +148,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR));
         oAuth2GoogleRow.setIdToken(oidcUser.getIdToken().getTokenValue());
         oAuth2GoogleRow.setAccessToken(oidcUser.getAccessTokenHash());
-        oAuth2GoogleRow.setIssuedAt(oidcUser.getIssuedAt().getEpochSecond());
-        oAuth2GoogleRow.setExpiresAt(oidcUser.getExpiresAt().getEpochSecond());
+        oAuth2GoogleRow.setIssuedAt(oidcUser.getIssuedAt());
+        oAuth2GoogleRow.setExpiresAt(oidcUser.getExpiresAt());
         oAuth2GoogleDao.update(oAuth2GoogleRow);
     }
 
