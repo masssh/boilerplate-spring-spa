@@ -18,4 +18,6 @@ public class OAuth2GoogleRow implements Serializable {
     private String accessToken;
     private Instant issuedAt;
     private Instant expiresAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 }

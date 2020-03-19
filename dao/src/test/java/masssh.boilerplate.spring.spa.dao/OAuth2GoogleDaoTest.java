@@ -2,6 +2,7 @@ package masssh.boilerplate.spring.spa.dao;
 
 import masssh.boilerplate.spring.spa.dao.annotation.DaoTest;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
+import masssh.boilerplate.spring.spa.testutil.factory.OAuth2GoogleFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,38 +13,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DaoTest
 class OAuth2GoogleDaoTest {
-    private static final Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
     @Autowired
     private OAuth2GoogleDao oAuth2GoogleDao;
-
-    static OAuth2GoogleRow createRow() {
-        return new OAuth2GoogleRow("subject", "idToken", "accessToken", now, now);
-    }
+    @Autowired
+    private OAuth2GoogleFactory oAuth2GoogleFactory;
 
     @Test
     void crud() {
         assertThat(oAuth2GoogleDao.single("subject")).isEmpty();
-        oAuth2GoogleDao.create(createRow());
-        OAuth2GoogleRow row = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
-        assertThat(row.getSubject()).isEqualTo("subject");
-        assertThat(row.getIdToken()).isEqualTo("idToken");
-        assertThat(row.getAccessToken()).isEqualTo("accessToken");
-        assertThat(row.getIssuedAt()).isEqualTo(now);
-        assertThat(row.getExpiresAt()).isEqualTo(now);
+        final Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        final OAuth2GoogleRow before = new OAuth2GoogleRow("subject", "idToken", "accessToken", now, now, null, null);
+        oAuth2GoogleDao.create(before);
+        OAuth2GoogleRow inserted = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
+        assertThat(inserted.getSubject()).isEqualTo("subject");
+        assertThat(inserted.getIdToken()).isEqualTo("idToken");
+        assertThat(inserted.getAccessToken()).isEqualTo("accessToken");
+        assertThat(inserted.getIssuedAt()).isEqualTo(now);
+        assertThat(inserted.getExpiresAt()).isEqualTo(now);
+        assertThat(inserted.getCreatedAt()).isEqualTo(before.getCreatedAt());
+        assertThat(inserted.getUpdatedAt()).isEqualTo(before.getUpdatedAt());
 
-        row.setIdToken("updated");
-        row.setAccessToken("updated");
-        row.setIssuedAt(now.plusSeconds(1));
-        row.setExpiresAt(now.plusSeconds(1));
-        oAuth2GoogleDao.update(row);
+        inserted.setIdToken("updated");
+        inserted.setAccessToken("updated");
+        inserted.setIssuedAt(now.plusSeconds(1));
+        inserted.setExpiresAt(now.plusSeconds(1));
+        oAuth2GoogleDao.update(inserted);
 
-        row = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
-        assertThat(row.getIdToken()).isEqualTo("updated");
-        assertThat(row.getAccessToken()).isEqualTo("updated");
-        assertThat(row.getIssuedAt()).isEqualTo(now.plusSeconds(1));
-        assertThat(row.getExpiresAt()).isEqualTo(now.plusSeconds(1));
+        final OAuth2GoogleRow updated = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
+        assertThat(updated.getIdToken()).isEqualTo("updated");
+        assertThat(updated.getAccessToken()).isEqualTo("updated");
+        assertThat(updated.getIssuedAt()).isEqualTo(now.plusSeconds(1));
+        assertThat(updated.getExpiresAt()).isEqualTo(now.plusSeconds(1));
+        assertThat(updated.getCreatedAt()).isEqualTo(inserted.getCreatedAt());
+        assertThat(updated.getUpdatedAt()).isAfterOrEqualTo(inserted.getUpdatedAt());
 
-        oAuth2GoogleDao.delete(row.getSubject());
+        oAuth2GoogleDao.delete(updated.getSubject());
         assertThat(oAuth2GoogleDao.single("subject")).isEmpty();
     }
 }

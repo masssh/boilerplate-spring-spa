@@ -4,6 +4,6 @@ dependencies {
     implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter"
     implementation "mysql:mysql-connector-java"
 
-    testImplementation project(":util")
+    testImplementation project(":testutil")
     testImplementation "org.mybatis.spring.boot:mybatis-spring-boot-starter-test"
 }

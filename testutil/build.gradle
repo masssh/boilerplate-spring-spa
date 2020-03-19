@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":dao")
     implementation project(":model")
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter"
 
     testImplementation "org.mybatis.spring.boot:mybatis-spring-boot-starter-test"
 }

@@ -8,6 +8,7 @@ import masssh.boilerplate.spring.spa.api.security.ApplicationUserDetails;
 import masssh.boilerplate.spring.spa.api.security.Roles;
 import masssh.boilerplate.spring.spa.dao.OAuth2GoogleDao;
 import masssh.boilerplate.spring.spa.dao.UserDao;
+import masssh.boilerplate.spring.spa.dao.service.RandomService;
 import masssh.boilerplate.spring.spa.dao.service.UserCreator;
 import masssh.boilerplate.spring.spa.model.cookie.UserToken;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
@@ -22,7 +23,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -126,7 +125,9 @@ public class UserService implements UserDetailsService {
                 oidcUser.getIdToken().getTokenValue(),
                 oidcUser.getAccessTokenHash(),
                 oidcUser.getIssuedAt(),
-                oidcUser.getExpiresAt());
+                oidcUser.getExpiresAt(),
+                null,
+                null);
         oAuth2GoogleDao.create(oAuth2GoogleRow);
     }
 
@@ -140,7 +141,9 @@ public class UserService implements UserDetailsService {
                         locale,
                         StringUtils.isEmpty(password) ? null : passwordEncoder.encode(password),
                         null,
-                        subject));
+                        subject,
+                        null,
+                        null));
     }
 
     private void updateOAuth2Google(final OidcUser oidcUser) {
@@ -180,7 +183,7 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateAccessToken() {
-        return DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
+        return RandomService.randomAlphaNumeric(30);
     }
 
     public String encodeUserToken(final UserToken userToken) {
