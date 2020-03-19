@@ -2,6 +2,7 @@ package masssh.boilerplate.spring.spa.dao.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
+import masssh.boilerplate.spring.spa.dao.interceptor.MyBatisUpdateInterceptor;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
@@ -13,6 +14,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+
 import javax.sql.DataSource;
 import java.io.IOException;
 
@@ -51,6 +53,7 @@ public class DatabaseConfiguration {
         configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.WARNING);
         configuration.setDefaultStatementTimeout(60);
         configuration.setMapUnderscoreToCamelCase(true);
+        configuration.addInterceptor(new MyBatisUpdateInterceptor());
         sqlSessionFactoryBean.setConfiguration(configuration);
         return sqlSessionFactoryBean;
     }

@@ -6,7 +6,6 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,40 +24,39 @@ class UserDaoTest {
     @Test
     void crud() {
         assertThat(userDao.single("userId")).isEmpty();
-        userDao.create(createRow());
-        UserRow userRow = userDao.single("userId").orElseThrow(AssertionError::new);
-        assertThat(userRow.getUserId()).isEqualTo("userId");
-        assertThat(userRow.getUserName()).isEqualTo("userName");
-        assertThat(userRow.getRole()).isEqualTo("roleUser");
-        assertThat(userRow.getEmail()).isEqualTo("email");
-        assertThat(userRow.getLocale()).isEqualTo(Locale.JAPAN.toString());
-        assertThat(userRow.getPasswordHash()).isEqualTo("passwordHash");
-        assertThat(userRow.getAccessToken()).isEqualTo("accessToken");
-        assertThat(userRow.getGoogleSubject()).isEqualTo(null);
-        final Instant createdAt = userRow.getCreatedAt();
-        final Instant updatedAt = userRow.getUpdatedAt();
-        assertThat(createdAt).isNotNull();
-        assertThat(updatedAt).isNotNull();
+        final UserRow before = createRow();
+        userDao.create(before);
+        UserRow inserted = userDao.single("userId").orElseThrow(AssertionError::new);
+        assertThat(inserted.getUserId()).isEqualTo("userId");
+        assertThat(inserted.getUserName()).isEqualTo("userName");
+        assertThat(inserted.getRole()).isEqualTo("roleUser");
+        assertThat(inserted.getEmail()).isEqualTo("email");
+        assertThat(inserted.getLocale()).isEqualTo(Locale.JAPAN.toString());
+        assertThat(inserted.getPasswordHash()).isEqualTo("passwordHash");
+        assertThat(inserted.getAccessToken()).isEqualTo("accessToken");
+        assertThat(inserted.getGoogleSubject()).isEqualTo(null);
+        assertThat(inserted.getCreatedAt()).isEqualTo(before.getCreatedAt());
+        assertThat(inserted.getUpdatedAt()).isEqualTo(before.getUpdatedAt());
 
-        userRow.setUserName("updated");
-        userRow.setRole("updated");
-        userRow.setEmail("updated");
-        userRow.setLocale("updated");
-        userRow.setPasswordHash("updated");
-        userRow.setAccessToken("updated");
-        userDao.update(userRow);
+        inserted.setUserName("updated");
+        inserted.setRole("updated");
+        inserted.setEmail("updated");
+        inserted.setLocale("updated");
+        inserted.setPasswordHash("updated");
+        inserted.setAccessToken("updated");
+        userDao.update(inserted);
 
-        userRow = userDao.single("userId").orElseThrow(AssertionError::new);
-        assertThat(userRow.getUserName()).isEqualTo("updated");
-        assertThat(userRow.getRole()).isEqualTo("updated");
-        assertThat(userRow.getEmail()).isEqualTo("updated");
-        assertThat(userRow.getLocale()).isEqualTo("updated");
-        assertThat(userRow.getPasswordHash()).isEqualTo("updated");
-        assertThat(userRow.getAccessToken()).isEqualTo("updated");
-        assertThat(userRow.getCreatedAt()).isEqualTo(createdAt);
-        assertThat(userRow.getUpdatedAt()).isAfter(updatedAt);
+        final UserRow updated = userDao.single("userId").orElseThrow(AssertionError::new);
+        assertThat(updated.getUserName()).isEqualTo("updated");
+        assertThat(updated.getRole()).isEqualTo("updated");
+        assertThat(updated.getEmail()).isEqualTo("updated");
+        assertThat(updated.getLocale()).isEqualTo("updated");
+        assertThat(updated.getPasswordHash()).isEqualTo("updated");
+        assertThat(updated.getAccessToken()).isEqualTo("updated");
+        assertThat(updated.getCreatedAt()).isEqualTo(inserted.getCreatedAt());
+        assertThat(updated.getCreatedAt()).isAfterOrEqualTo(inserted.getCreatedAt());
 
-        userDao.delete(userRow.getUserId());
+        userDao.delete(updated.getUserId());
         assertThat(userDao.single("userId")).isEmpty();
     }
 
