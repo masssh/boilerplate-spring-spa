@@ -4,3 +4,12 @@ include 'model'
 include 'dao'
 include 'client'
 include 'testutil'
+
+/* Uncomment this block if you can use gradle scan feature
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}
+*/

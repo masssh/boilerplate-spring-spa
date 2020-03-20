@@ -1,9 +1,10 @@
 package masssh.boilerplate.spring.spa.dao.annotation;
 
-import masssh.boilerplate.spring.spa.dao.config.DatabaseConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.annotation.*;
@@ -12,9 +13,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@SpringBootTest(classes = {DatabaseConfiguration.class})
-@ComponentScan("masssh.boilerplate.spring.spa")
+@SpringBootTest(classes = DaoTest.DaoTestConfiguration.class)
 @EnableConfigurationProperties
 @Transactional
 public @interface DaoTest {
+    @Configuration
+    @ComponentScan("masssh.boilerplate.spring.spa")
+    @EnableAutoConfiguration
+    class DaoTestConfiguration {
+    }
 }
