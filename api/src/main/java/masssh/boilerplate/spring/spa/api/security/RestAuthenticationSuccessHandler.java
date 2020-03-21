@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.dao.UserDao;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
-import masssh.boilerplate.spring.spa.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty.SecurityProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final ApplicationProperty applicationProperty;
+    private final SecurityProperty securityProperty;
     private final UserDao userDao;
     private final UserService userService;
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -41,7 +41,7 @@ class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             }
             userRow = userRowOptional.get();
             userService.refreshAccessToken(userRow);
-            response.sendRedirect(applicationProperty.getSecurity().getLoginSuccess());
+            response.sendRedirect(securityProperty.getLoginSuccess());
         } else if (principal instanceof ApplicationUserDetails) {
             userRow = ((ApplicationUserDetails) principal).getUserRow();
             userService.refreshAccessToken(userRow);

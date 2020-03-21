@@ -1,4 +1,8 @@
 config:
+    api:
+        endpoint: http://localhost:8080/api
+    web:
+        host: http://localhost:8888
     mysql:
         jdbc-url: jdbc:mysql://localhost:3306/local
         username: mysqluser

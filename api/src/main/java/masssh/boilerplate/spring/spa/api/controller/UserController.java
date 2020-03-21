@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import masssh.boilerplate.spring.spa.api.service.UserService;
 import masssh.boilerplate.spring.spa.model.response.SuccessResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty.WebProperty;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.security.Principal;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -29,6 +32,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
+    private final WebProperty webProperty;
     private final UserService userService;
 
     @GetMapping("/api/token")
@@ -37,7 +41,7 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
 
         return ResponseEntity.ok(new LoginResponse(
-                userRow.getUserId(),
+                userRow.getUserHash(),
                 userRow.getAccessToken(),
                 userRow.getRole()));
     }
@@ -47,25 +51,20 @@ public class UserController {
                                                   final BindingResult bindingResult,
                                                   final Principal principal) {
         if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
+            throw new ResponseStatusException(BAD_REQUEST);
         }
-        {
-            final Optional<UserRow> userRow = userService.loadUserByPrincipal(principal);
-            if (userRow.isPresent()) {
-                throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
-            }
-        }
-        {
-            final Optional<UserRow> userRow = userService.loadUserByEmail(request.getEmail());
-            if (userRow.isPresent()) {
-                throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
-            }
+        if (userService.loadUserByPrincipal(principal).isPresent()) {
+            throw new ResponseStatusException(BAD_REQUEST);
         }
 
-        userService.registerUser(request.getUserName(),
-                request.getPassword(),
-                request.getEmail(),
-                LocaleContextHolder.getLocale());
+        try {
+            userService.registerUserByEmail(request.getUserName(),
+                    request.getPassword(),
+                    request.getEmail(),
+                    LocaleContextHolder.getLocale());
+        } catch (SQLIntegrityConstraintViolationException e) {
+            e.printStackTrace();
+        }
         return ResponseEntity.ok(new SuccessResponse());
     }
 
@@ -100,10 +99,19 @@ public class UserController {
                                                       final HttpServletRequest request) {
         final UserRow userRow = userService.loadUserByPrincipal(principal)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
-        userService.deleteUser(userRow.getUserId());
+        userService.deleteUser(userRow.getUserHash());
         SecurityContextHolder.clearContext();
         Optional.ofNullable(request.getSession()).ifPresent(HttpSession::invalidate);
         return ResponseEntity.ok(new SuccessResponse());
+    }
+
+    @GetMapping("/api/verify/email")
+    public RedirectView getUser(@RequestParam("q") final String verificationHash,
+                                final HttpServletRequest request) {
+        userService.verifyUserByEmail(verificationHash);
+        SecurityContextHolder.clearContext();
+        Optional.ofNullable(request.getSession()).ifPresent(HttpSession::invalidate);
+        return new RedirectView(webProperty.getHost());
     }
 
     @Data
@@ -111,7 +119,7 @@ public class UserController {
     @AllArgsConstructor
     @EqualsAndHashCode(callSuper = true)
     private static final class LoginResponse extends SuccessResponse {
-        private String userId;
+        private String userHash;
         private String accessToken;
         private String role;
     }

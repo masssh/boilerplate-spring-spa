@@ -10,7 +10,7 @@ export default function() {
       title: null,
       user: {
         login: false,
-        userId: null,
+        userHash: null,
         accessToken: null,
         role: null,
         userName: null,
@@ -24,15 +24,15 @@ export default function() {
       setTitle(state, { title }) {
         state.title = title
       },
-      login(state, { userId, accessToken, role }) {
+      login(state, { userHash, accessToken, role }) {
         state.user.login = true
-        state.user.userId = userId
+        state.user.userHash = userHash
         state.user.accessToken = accessToken
         state.user.role = role
       },
       logout(state) {
         state.user.login = false
-        state.user.userId = null
+        state.user.userHash = null
         state.user.accessToken = null
         state.user.role = null
       },
@@ -53,14 +53,14 @@ export default function() {
         await Vue.prototype.$axios
           .get('/api/token')
           .then(function(response) {
-            const { userId, accessToken, role } = response.data
+            const { userHash, accessToken, role } = response.data
             commit('login', {
-              userId: userId,
+              userHash: userHash,
               accessToken: accessToken,
               role: role
             })
             dispatch('getUser')
-            onSuccess(userId)
+            onSuccess()
           })
           .catch(function() {
             console.debug('No valid session exists')

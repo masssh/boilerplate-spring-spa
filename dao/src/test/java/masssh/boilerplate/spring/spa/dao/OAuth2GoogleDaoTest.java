@@ -20,11 +20,12 @@ class OAuth2GoogleDaoTest {
 
     @Test
     void crud() {
-        assertThat(oAuth2GoogleDao.single("subject")).isEmpty();
         final Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        final OAuth2GoogleRow before = new OAuth2GoogleRow("subject", "idToken", "accessToken", now, now, null, null);
+        final OAuth2GoogleRow before = new OAuth2GoogleRow(0, "subject", "idToken", "accessToken", now, now, null, null);
         oAuth2GoogleDao.create(before);
-        OAuth2GoogleRow inserted = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
+        final long oAuth2GoogleId = before.getOauth2GoogleId();
+        OAuth2GoogleRow inserted = oAuth2GoogleDao.single(oAuth2GoogleId).orElseThrow(AssertionError::new);
+        assertThat(inserted.getOauth2GoogleId()).isEqualTo(oAuth2GoogleId);
         assertThat(inserted.getSubject()).isEqualTo("subject");
         assertThat(inserted.getIdToken()).isEqualTo("idToken");
         assertThat(inserted.getAccessToken()).isEqualTo("accessToken");
@@ -39,7 +40,7 @@ class OAuth2GoogleDaoTest {
         inserted.setExpiresAt(now.plusSeconds(1));
         oAuth2GoogleDao.update(inserted);
 
-        final OAuth2GoogleRow updated = oAuth2GoogleDao.single("subject").orElseThrow(AssertionError::new);
+        final OAuth2GoogleRow updated = oAuth2GoogleDao.single(oAuth2GoogleId).orElseThrow(AssertionError::new);
         assertThat(updated.getIdToken()).isEqualTo("updated");
         assertThat(updated.getAccessToken()).isEqualTo("updated");
         assertThat(updated.getIssuedAt()).isEqualTo(now.plusSeconds(1));
@@ -47,7 +48,7 @@ class OAuth2GoogleDaoTest {
         assertThat(updated.getCreatedAt()).isEqualTo(inserted.getCreatedAt());
         assertThat(updated.getUpdatedAt()).isAfterOrEqualTo(inserted.getUpdatedAt());
 
-        oAuth2GoogleDao.delete(updated.getSubject());
-        assertThat(oAuth2GoogleDao.single("subject")).isEmpty();
+        oAuth2GoogleDao.delete(oAuth2GoogleId);
+        assertThat(oAuth2GoogleDao.single(oAuth2GoogleId)).isEmpty();
     }
 }

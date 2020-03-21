@@ -3,7 +3,7 @@ package masssh.boilerplate.spring.spa.dao.config;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import masssh.boilerplate.spring.spa.dao.interceptor.MyBatisUpdateInterceptor;
-import masssh.boilerplate.spring.spa.property.ApplicationProperty;
+import masssh.boilerplate.spring.spa.property.ApplicationProperty.MysqlProperty;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -18,24 +18,22 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-@SuppressWarnings("WeakerAccess")
 @Configuration
 @MapperScan("masssh.boilerplate.spring.spa.dao")
 @RequiredArgsConstructor
 public class DatabaseConfiguration {
-    private final ApplicationProperty applicationProperty;
+    private final MysqlProperty mysqlProperty;
 
     @Bean
     public DataSource dataSource() {
-        final ApplicationProperty.MysqlProperty dataSourceProperty = applicationProperty.getMysql();
         final HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(dataSourceProperty.getJdbcUrl());
-        dataSource.setUsername(dataSourceProperty.getUsername());
-        dataSource.setPassword(dataSourceProperty.getPassword());
-        dataSource.setPoolName(dataSourceProperty.getPoolName());
-        dataSource.setMinimumIdle(dataSourceProperty.getMinimumIdle());
-        dataSource.setMaximumPoolSize(dataSourceProperty.getMaximumPoolSize());
-        dataSource.setLeakDetectionThreshold(dataSourceProperty.getLeakDetectionThreshold());
+        dataSource.setJdbcUrl(mysqlProperty.getJdbcUrl());
+        dataSource.setUsername(mysqlProperty.getUsername());
+        dataSource.setPassword(mysqlProperty.getPassword());
+        dataSource.setPoolName(mysqlProperty.getPoolName());
+        dataSource.setMinimumIdle(mysqlProperty.getMinimumIdle());
+        dataSource.setMaximumPoolSize(mysqlProperty.getMaximumPoolSize());
+        dataSource.setLeakDetectionThreshold(mysqlProperty.getLeakDetectionThreshold());
         return dataSource;
     }
 

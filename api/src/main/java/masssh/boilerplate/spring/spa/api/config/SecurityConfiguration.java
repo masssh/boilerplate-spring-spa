@@ -1,7 +1,6 @@
 package masssh.boilerplate.spring.spa.api.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.OAuth2ClientProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    private final ApplicationProperty applicationProperty;
+    private final OAuth2ClientProperty oAuth2ClientProperty;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,11 +41,10 @@ public class SecurityConfiguration {
      * /oauth2/authorization/google
      */
     private ClientRegistration googleClientRegistration() {
-        final OAuth2ClientProperty clientProperty = applicationProperty.getOauth2Google();
         return CommonOAuth2Provider.GOOGLE.getBuilder("google")
-                .clientId(clientProperty.getClientId())
-                .clientSecret(clientProperty.getClientSecret())
-                .scope(clientProperty.getScope().split(","))
+                .clientId(oAuth2ClientProperty.getClientId())
+                .clientSecret(oAuth2ClientProperty.getClientSecret())
+                .scope(oAuth2ClientProperty.getScope().split(","))
                 .build();
     }
 

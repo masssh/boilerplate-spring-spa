@@ -14,7 +14,8 @@ import java.time.Instant;
 @AllArgsConstructor
 public class UserRow implements Serializable {
     private OAuth2GoogleRow oAuth2GoogleRow;
-    private String userId;
+    private long userId;
+    private String userHash;
     private String userName;
     private String role;
     private String email;

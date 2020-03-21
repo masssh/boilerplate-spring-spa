@@ -27,8 +27,8 @@ export default function({ store }) {
       store.dispatch('setTitle', { title: 'Home' })
       next('/')
     }
-    const onSuccess = (userId) => {
-      if (to.path === '/' && userId) {
+    const onSuccess = () => {
+      if (to.path === '/') {
         next('/dashboard')
       } else {
         validate()

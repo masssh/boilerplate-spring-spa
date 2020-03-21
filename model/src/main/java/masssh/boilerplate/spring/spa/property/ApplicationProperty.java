@@ -4,51 +4,66 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@ConfigurationProperties(prefix = "config")
-@Component
-@Data
 public class ApplicationProperty {
-    private MysqlProperty mysql;
-    private RedisProperty redis;
-    private ElasticsearchProperty elasticsearch;
-    private OAuth2ClientProperty oauth2Google;
-    private SecurityProperty security;
+    @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.api")
+    public static class ApiProperty {
+        private String endpoint;
+    }
 
     @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.web")
+    public static class WebProperty {
+        private String host;
+    }
+
+    @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.mysql")
     public static class MysqlProperty {
-        String jdbcUrl;
-        String username;
-        String password;
-        String poolName;
-        int minimumIdle;
-        int maximumPoolSize;
-        long leakDetectionThreshold;
+        private String jdbcUrl;
+        private String username;
+        private String password;
+        private String poolName;
+        private int minimumIdle;
+        private int maximumPoolSize;
+        private long leakDetectionThreshold;
     }
 
     @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.redis")
     public static class RedisProperty {
-        String host;
-        int port;
+        private String host;
+        private int port;
     }
 
     @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.elasticsearch")
     public static class ElasticsearchProperty {
-        String host;
-        int port;
-        String clusterName;
+        private String host;
+        private int port;
+        private String clusterName;
     }
 
     @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.oauth2-google")
     public static class OAuth2ClientProperty {
-        String clientId;
-        String clientSecret;
-        String redirectUriTemplate;
-        String scope;
+        private String clientId;
+        private String clientSecret;
+        private String redirectUriTemplate;
+        private String scope;
     }
 
     @Data
+    @Component
+    @ConfigurationProperties(prefix = "config.security")
     public static class SecurityProperty {
-        String allowOrigin;
-        String loginSuccess;
+        private String allowOrigin;
+        private String loginSuccess;
     }
 }

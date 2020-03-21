@@ -23,7 +23,6 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
     private final RestAuthenticationFailureHandler restAuthenticationFailureHandler;
     private final OpenIdUserService openIdUserService;
-//    private final TokenPreAuthenticationFilter tokenPreAuthenticationFilter;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth,
@@ -47,6 +46,8 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/token",
                         "/api/signIn",
                         "/api/signUp",
+                        "/api/verify/email",
+                        "/api/verify/password",
                         "/favicon.ico",
                         "/oauth2/**",
                         "/actuator/**"

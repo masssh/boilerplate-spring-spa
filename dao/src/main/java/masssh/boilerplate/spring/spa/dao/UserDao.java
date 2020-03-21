@@ -4,21 +4,30 @@ import masssh.boilerplate.spring.spa.model.row.UserRow;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 @Mapper
 public interface UserDao {
     @Select("SELECT * FROM user WHERE userId = #{userId}")
-    Optional<UserRow> single(@Param("userId") String userId);
+    Optional<UserRow> single(@Param("userId") long userId);
 
-    @Insert("INSERT INTO user VALUES ( #{userId}, #{userName}, #{role}, #{email}, #{locale}, #{passwordHash}, #{accessToken}, #{googleSubject}, #{createdAt}, #{updatedAt} )")
-    void create(UserRow userRow);
+    @Select("SELECT * FROM user WHERE userHash = #{userHash}")
+    Optional<UserRow> singleByUserHash(@Param("userHash") String userHash);
 
-    @Update("UPDATE user SET userId=#{userId}, userName=#{userName}, role=#{role}, email=#{email}, locale=#{locale}, passwordHash=#{passwordHash}, accessToken=#{accessToken}, googleSubject=#{googleSubject}, updatedAt=#{updatedAt} WHERE userId = #{userId}")
-    void update(UserRow userRow);
+    @Insert("INSERT INTO user (userHash, userName, role, email, locale, passwordHash, accessToken, googleSubject, createdAt, updatedAt)" +
+            "VALUES ( #{userHash}, #{userName}, #{role}, #{email}, #{locale}, #{passwordHash}, #{accessToken}, #{googleSubject}, #{createdAt}, #{updatedAt} )")
+    @SelectKey(statement = "SELECT @@IDENTITY", keyProperty = "userId", before = false, resultType = long.class)
+    int create(UserRow userRow) throws SQLIntegrityConstraintViolationException;
+
+    @Update("UPDATE user SET userName=#{userName}, role=#{role}, locale=#{locale}, passwordHash=#{passwordHash}, accessToken=#{accessToken}, updatedAt=#{updatedAt} WHERE userId = #{userId}")
+    int update(UserRow userRow);
+
+    @Update("UPDATE user SET googleSubject=#{googleSubject}, updatedAt=#{updatedAt} WHERE userId = #{userId}")
+    int updateGoogleSubject(UserRow userRow) throws SQLIntegrityConstraintViolationException;
 
     @Delete("DELETE FROM user WHERE userId = #{userId}")
-    boolean delete(@Param("userId") String userId);
+    boolean delete(@Param("userId") long userId);
 
     @Select("SELECT * FROM user WHERE userName = #{userName}")
     Optional<UserRow> singleByUserName(@Param("userName") String userName);

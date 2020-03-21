@@ -39,12 +39,6 @@ public class LocalOnlyController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/local/mail")
-    public ResponseEntity<SuccessResponse> mail() {
-        mailService.sendMail();
-        return ResponseEntity.ok(new SuccessResponse());
-    }
-
     @GetMapping("/api/test")
     public ResponseEntity<SuccessResponse> apiTest() {
         return ResponseEntity.ok(new SuccessResponse());

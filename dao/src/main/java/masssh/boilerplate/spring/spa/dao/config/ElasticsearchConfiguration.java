@@ -1,7 +1,6 @@
 package masssh.boilerplate.spring.spa.dao.config;
 
 import lombok.RequiredArgsConstructor;
-import masssh.boilerplate.spring.spa.property.ApplicationProperty;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.ElasticsearchProperty;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -16,6 +15,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchEntityMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.EntityMapper;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -24,15 +24,14 @@ import java.net.UnknownHostException;
 @RequiredArgsConstructor
 @SuppressWarnings("ALL")
 public class ElasticsearchConfiguration extends ElasticsearchConfigurationSupport {
-    private final ApplicationProperty applicationProperty;
+    private final ElasticsearchProperty elasticsearchProperty;
 
     @Bean
     public Client elasticsearchClient() throws UnknownHostException {
         System.setProperty("es.set.netty.runtime.available.processors", "false");
-        final ElasticsearchProperty property = applicationProperty.getElasticsearch();
-        Settings settings = Settings.builder().put("cluster.name", property.getClusterName()).build();
+        Settings settings = Settings.builder().put("cluster.name", elasticsearchProperty.getClusterName()).build();
         TransportClient client = new PreBuiltTransportClient(settings);
-        client.addTransportAddress(new TransportAddress(InetAddress.getByName(property.getHost()), property.getPort()));
+        client.addTransportAddress(new TransportAddress(InetAddress.getByName(elasticsearchProperty.getHost()), elasticsearchProperty.getPort()));
         return client;
     }
 

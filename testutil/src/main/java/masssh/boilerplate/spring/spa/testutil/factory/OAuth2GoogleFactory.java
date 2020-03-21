@@ -32,7 +32,6 @@ public class OAuth2GoogleFactory {
             defaultExpiresAt = now.plusSeconds(60 * 60 * 24);
         }
 
-        private String subject = "subject";
         private String idToken = "idToken";
         private String accessToken = "accessToken";
         private Instant issuedAt = defaultIssuedAt;
@@ -40,7 +39,6 @@ public class OAuth2GoogleFactory {
 
         public OAuth2GoogleRow create() {
             final OAuth2GoogleRow row = new OAuth2GoogleRow();
-            row.setSubject(subject);
             row.setIdToken(idToken);
             row.setAccessToken(accessToken);
             row.setIssuedAt(issuedAt);
@@ -50,7 +48,7 @@ public class OAuth2GoogleFactory {
             while (true) {
                 final String subject = RandomService.randomAlphaNumeric(10);
                 synchronized (this) {
-                    if (oAuth2GoogleDao.single(subject).isEmpty()) {
+                    if (oAuth2GoogleDao.singleBySubject(subject).isEmpty()) {
                         row.setSubject(subject);
                         oAuth2GoogleDao.create(row);
                         break;
