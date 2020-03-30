@@ -12,6 +12,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+  components: {},
   computed: mapState({
     originalUserName: (state) => state.user.userName
   }),
@@ -24,14 +25,20 @@ export default {
     this.userName = this.originalUserName
   },
   methods: {
-    update() {
-      const { userName } = this
-      if (this.$refs.form.validate()) {
-        this.$store
-          .dispatch('updateUser', {
+    async update() {
+      try {
+        const { userName } = this
+        if (this.$refs.form.validate()) {
+          await this.$store.dispatch('updateUser', {
             userName: userName
           })
-          .then(() => this.$router.push('/user'))
+        }
+        this.$router.push('/user')
+      } catch (error) {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'Failed to update user profile'
+        })
       }
     }
   }

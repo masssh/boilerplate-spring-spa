@@ -26,7 +26,7 @@
         </q-toolbar-title>
 
         <div>
-          <q-btn v-if="!login" label="Sign In" to="/signIn" no-caps flat />
+          <q-btn v-if="!login" label="Sign In" to="/login" no-caps flat />
           <q-btn v-if="!login" label="Sign Up" to="/signUp" no-caps flat />
           <q-btn v-if="login" icon="account_circle" flat round>
             <q-menu

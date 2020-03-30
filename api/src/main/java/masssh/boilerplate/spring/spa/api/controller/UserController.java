@@ -3,6 +3,7 @@ package masssh.boilerplate.spring.spa.api.controller;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import masssh.boilerplate.spring.spa.api.service.UserService;
+import masssh.boilerplate.spring.spa.exception.DataNotFoundException;
 import masssh.boilerplate.spring.spa.model.response.SuccessResponse;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import masssh.boilerplate.spring.spa.property.ApplicationProperty.WebProperty;
@@ -84,6 +85,7 @@ public class UserController {
         }
         final UserRow userRow = userService.loadUserByPrincipal(principal)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+
         if (!StringUtils.isEmpty(request.getUserName())) {
             userRow.setUserName(request.userName);
         }
@@ -106,12 +108,46 @@ public class UserController {
     }
 
     @GetMapping("/api/verify/email")
-    public RedirectView getUser(@RequestParam("q") final String verificationHash,
-                                final HttpServletRequest request) {
+    public RedirectView verifyEmail(@RequestParam("q") final String verificationHash,
+                                    final HttpServletRequest request) {
         userService.verifyUserByEmail(verificationHash);
         SecurityContextHolder.clearContext();
         Optional.ofNullable(request.getSession()).ifPresent(HttpSession::invalidate);
         return new RedirectView(webProperty.getHost());
+    }
+
+    @PostMapping("/api/password/forgot")
+    public ResponseEntity<SuccessResponse> forgotPassword(@Valid @RequestBody final VerifyPasswordRequest request,
+                                                          final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
+        }
+
+        try {
+            userService.sendResetPasswordVerification(request.getEmail());
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new ResponseStatusException(NOT_FOUND);
+        } catch (DataNotFoundException ignored) {
+            // do nothing
+        }
+
+        return ResponseEntity.ok(new SuccessResponse());
+    }
+
+    @PostMapping("/api/password/reset")
+    public ResponseEntity<SuccessResponse> resetPassword(@Valid @RequestBody final ResetPasswordRequest request,
+                                                         final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(BAD_REQUEST, bindingResult.toString());
+        }
+
+        try {
+            userService.resetPassword(request.getEmail(), request.getPassword(), request.getVerificationHash());
+        } catch (DataNotFoundException e) {
+            throw new ResponseStatusException(NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(new SuccessResponse());
     }
 
     @Data
@@ -155,4 +191,25 @@ public class UserController {
         private String password;
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class VerifyPasswordRequest {
+        @NotEmpty
+        @Email
+        private String email;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class ResetPasswordRequest {
+        @NotEmpty
+        @Email
+        private String email;
+        @Min(8)
+        private String password;
+        @NotEmpty
+        private String verificationHash;
+    }
 }

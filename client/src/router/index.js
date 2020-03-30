@@ -9,38 +9,41 @@ export default function({ store }) {
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
     mode: process.env.VUE_ROUTER_MODE,
-    base: process.env.VUE_ROUTER_BASE
+    base: '/web/'
   })
 
   router.beforeEach((to, from, next) => {
-    const validate = () => {
+    async function validate() {
       const { login } = store.state.user
       if (to.path === '/' && login) {
         next({ path: '/dashboard' })
         return
       }
       if (to.meta.public || login) {
-        store.dispatch('setTitle', { title: to.name })
+        store.commit('setTitle', { title: to.name })
         next()
         return
       }
-      store.dispatch('setTitle', { title: 'Home' })
+      store.commit('setTitle', { title: 'Home' })
       next('/')
     }
-    const onSuccess = () => {
-      if (to.path === '/') {
-        next('/dashboard')
-      } else {
+    async function initialize(store, validate) {
+      try {
+        store.commit('initialized')
+        await store.dispatch('getToken')
+        await store.dispatch('getUser')
+        if (to.path === '/') {
+          next('/dashboard')
+        } else {
+          validate()
+        }
+      } catch (error) {
         validate()
       }
     }
-
     const { initialized } = store.state
     if (!initialized) {
-      store.dispatch('initializeToken', {
-        onSuccess: onSuccess,
-        onError: validate
-      })
+      initialize(store, validate)
       return
     }
     validate()

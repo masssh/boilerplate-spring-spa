@@ -17,6 +17,12 @@
       :rules="[(v) => !!v || 'Password is required']"
     />
     <q-btn @click="login" label="Sign In" no-caps />
+    <q-btn
+      to="/password/forgot"
+      label="Forgot your password?"
+      color="info"
+      no-caps
+    />
   </q-form>
 </template>
 <script>
@@ -29,13 +35,23 @@ export default {
     }
   },
   methods: {
-    login() {
-      const { email, password } = this
-      this.$store.dispatch('login', {
-        email: email,
-        password: password,
-        router: this.$router
-      })
+    async login() {
+      try {
+        const { email, password } = this
+        await this.$store.dispatch('login', {
+          email: email,
+          password: password,
+          router: this.$router
+        })
+        await this.$store.dispatch('getToken')
+        await this.$store.dispatch('getUser')
+        this.$router.push('/dashboard')
+      } catch {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'Failed to sign in'
+        })
+      }
     }
   }
 }

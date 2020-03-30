@@ -42,109 +42,59 @@ export default function() {
       }
     },
     actions: {
-      async setTitle({ commit }, { title }) {
-        commit('setTitle', { title: title })
+      async getToken({ commit }) {
+        const response = await Vue.prototype.$axios.get('/api/token')
+        const { userHash, accessToken, role } = response.data
+        commit('login', {
+          userHash: userHash,
+          accessToken: accessToken,
+          role: role
+        })
       },
-      async initializeToken({ commit, dispatch }, { onSuccess, onError }) {
-        commit('initialized')
-        dispatch('getToken', { onSuccess: onSuccess, onError: onError })
-      },
-      async getToken({ commit, dispatch }, { onSuccess, onError }) {
-        await Vue.prototype.$axios
-          .get('/api/token')
-          .then(function(response) {
-            const { userHash, accessToken, role } = response.data
-            commit('login', {
-              userHash: userHash,
-              accessToken: accessToken,
-              role: role
-            })
-            dispatch('getUser')
-            onSuccess()
-          })
-          .catch(function() {
-            console.debug('No valid session exists')
-            onError()
-          })
-      },
-      async login({ dispatch }, { email, password, router }) {
+      async login(_, { email, password }) {
         const data = new FormData()
         data.append('email', email)
         data.append('password', password)
-        await Vue.prototype.$axios
-          .post('/api/login', data)
-          .then(function() {
-            dispatch('getToken', {
-              onSuccess: () => {
-                router.push('/dashboard')
-              },
-              onError: () => {}
-            })
-          })
-          .catch(function() {
-            console.debug('User not found')
-          })
+        await Vue.prototype.$axios.post('/api/login', data)
       },
-      async signUp({ dispatch }, { userName, email, password, router }) {
-        await Vue.prototype.$axios
-          .post('/api/signUp', {
-            userName: userName,
-            email: email,
-            password: password
-          })
-          .then(function() {
-            dispatch('login', {
-              email: email,
-              password: password,
-              router: router
-            })
-          })
-          .catch(function() {
-            console.debug('Could not register user')
-          })
+      async signUp(_, { userName, email, password }) {
+        await Vue.prototype.$axios.post('/api/signUp', {
+          userName: userName,
+          email: email,
+          password: password
+        })
       },
       async logout({ commit }) {
-        await Vue.prototype.$axios
-          .post('/api/logout')
-          .then(function() {
-            commit('logout')
-          })
-          .catch(function() {
-            console.debug('Could not register user')
-            commit('logout')
-          })
+        await Vue.prototype.$axios.post('/api/logout')
+        commit('logout')
       },
       async getUser({ commit }) {
-        await Vue.prototype.$axios
-          .get('/api/user')
-          .then(function(response) {
-            const { userName, email } = response.data
-            commit('setUser', { userName: userName, email: email })
-          })
-          .catch(function() {
-            console.debug('Could not register user')
-          })
+        const response = await Vue.prototype.$axios.get('/api/user')
+        const { userName, email } = response.data
+        commit('setUser', { userName: userName, email: email })
       },
-      async updateUser({ commit }, { userName, password }) {
-        await Vue.prototype.$axios
-          .put('/api/user', { userName: userName, password: password })
-          .then(function(response) {
-            const { userName, email } = response.data
-            commit('setUser', { userName: userName, email: email })
-          })
-          .catch(function() {
-            console.debug('Could not register user')
-          })
+      async updateUser(_, { userName, password }) {
+        await Vue.prototype.$axios.put('/api/user', {
+          userName: userName,
+          password: password
+        })
+      },
+      async forgotPassword(_, { email }) {
+        await Vue.prototype.$axios.post('/api/password/forgot', {
+          email: email
+        })
+      },
+      async resetPassword({ commit }, { email, password, verificationHash }) {
+        await Vue.prototype.$axios.post('/api/password/reset', {
+          email: email,
+          password: password,
+          verificationHash: verificationHash
+        })
+        commit('logout')
       },
       async deleteUser({ commit }) {
-        await Vue.prototype.$axios
-          .delete('/api/user')
-          .then(function() {
-            commit('logout')
-          })
-          .catch(function() {
-            console.debug('Could not delete user')
-          })
+        await Vue.prototype.$axios.delete('/api/user')
+        commit('logout')
       }
     },
 

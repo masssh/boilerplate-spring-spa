@@ -8,4 +8,8 @@ server:
                 max-age: 7d
 spring:
     profiles.active: local
-    resources.add-mappings: false
+    resources:
+        static-locations:
+            - classpath:/static/
+    mvc:
+        static-path-pattern: /static/**

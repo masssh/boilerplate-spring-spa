@@ -44,11 +44,16 @@ class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/error",
                         "/api/token",
-                        "/api/signIn",
+                        "/api/login",
                         "/api/signUp",
                         "/api/verify/email",
-                        "/api/verify/password",
+                        "/api/password/forgot",
+                        "/api/password/reset",
                         "/favicon.ico",
+                        "/",
+                        "/web",
+                        "/web/**",
+                        "/static/**",
                         "/oauth2/**",
                         "/actuator/**"
                 ).permitAll()

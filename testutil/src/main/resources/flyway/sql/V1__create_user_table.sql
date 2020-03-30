@@ -40,7 +40,7 @@ CREATE TABLE verification (
     verificationHash VARCHAR(50) NOT NULL,
     userId BIGINT NOT NULL,
     verificationType ENUM('EMAIL', 'PASSWORD') NOT NULL,
-    expiresAt DATETIME NOT NULL,
+    expired BIT(1) NOT NULL DEFAULT FALSE,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME NOT NULL,
     PRIMARY KEY (verificationId),

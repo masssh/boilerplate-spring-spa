@@ -25,7 +25,7 @@ class VerificationDaoTest {
     void crud() throws SQLIntegrityConstraintViolationException {
         final Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final UserRow userRow1 = userFactory.builder().create();
-        final VerificationRow before = new VerificationRow(0, "verificationHash", userRow1.getUserId(), VerificationType.EMAIL, now, now, now);
+        final VerificationRow before = new VerificationRow(0, "verificationHash", userRow1.getUserId(), VerificationType.EMAIL, false, now, now);
         verificationDao.create(before);
         final long verificationId = before.getVerificationId();
         VerificationRow inserted = verificationDao.single(verificationId).orElseThrow(AssertionError::new);
@@ -33,18 +33,18 @@ class VerificationDaoTest {
         assertThat(inserted.getVerificationHash()).isEqualTo("verificationHash");
         assertThat(inserted.getUserId()).isEqualTo(userRow1.getUserId());
         assertThat(inserted.getVerificationType()).isEqualTo(VerificationType.EMAIL);
-        assertThat(inserted.getExpiresAt()).isEqualTo(now);
+        assertThat(inserted.isExpired()).isFalse();
         assertThat(inserted.getCreatedAt()).isAfterOrEqualTo(before.getCreatedAt());
         assertThat(inserted.getUpdatedAt()).isAfterOrEqualTo(before.getUpdatedAt());
 
         final UserRow userRow2 = userFactory.builder().create();
         inserted.setVerificationType(VerificationType.PASSWORD);
-        inserted.setExpiresAt(now.plusSeconds(1));
+        inserted.setExpired(true);
         verificationDao.update(inserted);
 
         final VerificationRow updated = verificationDao.single(verificationId).orElseThrow(AssertionError::new);
         assertThat(updated.getVerificationType()).isEqualTo(VerificationType.PASSWORD);
-        assertThat(updated.getExpiresAt()).isEqualTo(now.plusSeconds(1));
+        assertThat(updated.isExpired()).isTrue();
         assertThat(updated.getCreatedAt()).isEqualTo(inserted.getCreatedAt());
         assertThat(updated.getUpdatedAt()).isAfterOrEqualTo(inserted.getUpdatedAt());
 

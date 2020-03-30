@@ -17,7 +17,7 @@
         (v) => this.password === v || 'Password not matched'
       ]"
     />
-    <q-btn @click="signUp" label="Update" no-caps />
+    <q-btn @click="update" label="Update" no-caps />
   </q-form>
 </template>
 <script>
@@ -30,12 +30,20 @@ export default {
     }
   },
   methods: {
-    signUp() {
-      const { password } = this
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('updateUser', {
-          password: password,
-          router: this.$router
+    async update() {
+      try {
+        const { password } = this
+        if (this.$refs.form.validate()) {
+          await this.$store.dispatch('updateUser', {
+            userName: null,
+            password: password
+          })
+        }
+        this.$router.push('/user')
+      } catch (error) {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'Failed to update user password'
         })
       }
     }

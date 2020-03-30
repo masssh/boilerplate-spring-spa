@@ -11,6 +11,7 @@ import masssh.boilerplate.spring.spa.dao.service.RandomService;
 import masssh.boilerplate.spring.spa.dao.service.UserCreator;
 import masssh.boilerplate.spring.spa.dao.service.VerificationCreator;
 import masssh.boilerplate.spring.spa.enums.VerificationType;
+import masssh.boilerplate.spring.spa.exception.DataNotFoundException;
 import masssh.boilerplate.spring.spa.model.row.OAuth2GoogleRow;
 import masssh.boilerplate.spring.spa.model.row.UserRow;
 import masssh.boilerplate.spring.spa.model.row.VerificationRow;
@@ -38,6 +39,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService implements UserDetailsService {
+    private static long EXPIRATION_SEC = 60 * 60 * 24;
     private final UserDao userDao;
     private final VerificationDao verificationDao;
     private final UserCreator userCreator;
@@ -62,7 +64,7 @@ public class UserService implements UserDetailsService {
         }
         final Authentication authentication = (Authentication) principal;
         if (authentication.getPrincipal() instanceof ApplicationUserDetails) {
-            return Optional.of(((ApplicationUserDetails) authentication.getPrincipal()).getUserRow());
+            return userDao.singleByEmail((((ApplicationUserDetails) authentication.getPrincipal()).getUsername()));
         } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
             final String subject = ((DefaultOidcUser) authentication.getPrincipal()).getSubject();
             return userDao.singleBySubject(subject);
@@ -77,8 +79,7 @@ public class UserService implements UserDetailsService {
         }
         final UserRow userRow = createUser(userName, Roles.ROLE_NOT_VERIFIED, password, email, locale.toLanguageTag(), null);
         final VerificationRow verificationRow = verificationCreator.tryCreate(userRow.getUserId(),
-                VerificationType.EMAIL,
-                Instant.now().plusSeconds(60 * 60 * 24));
+                VerificationType.EMAIL);
         mailService.sendEmailVerification(email, verificationRow.getVerificationHash());
         return userRow;
     }
@@ -113,15 +114,42 @@ public class UserService implements UserDetailsService {
     public void verifyUserByEmail(final String verificationHash) {
         verificationDao.singleByVerificationHash(verificationHash)
                 .ifPresent(verification -> {
-                    if (VerificationType.EMAIL == verification.getVerificationType()) {
+                    if (VerificationType.EMAIL == verification.getVerificationType() &&
+                            !verification.isExpired() &&
+                            Instant.now().minusSeconds(EXPIRATION_SEC).isAfter(verification.getCreatedAt())) {
                         userDao.single(verification.getUserId()).ifPresent(user -> {
                             if (Roles.ROLE_NOT_VERIFIED.equals(user.getRole())) {
                                 user.setRole(Roles.ROLE_USER);
                                 userDao.update(user);
+                                verification.setExpired(true);
+                                verificationDao.update(verification);
                             }
                         });
                     }
                 });
+    }
+
+    @Transactional
+    public void sendResetPasswordVerification(final String email) throws DataNotFoundException, SQLIntegrityConstraintViolationException {
+        final UserRow user = userDao.singleByEmail(email).orElseThrow(DataNotFoundException::new);
+        final VerificationRow verification = verificationCreator.tryCreate(user.getUserId(), VerificationType.PASSWORD);
+        mailService.sendResetPasswordVerification(email, verification.getVerificationHash());
+    }
+
+    @Transactional
+    public void resetPassword(final String email, final String password, final String verificationHash) throws DataNotFoundException {
+        final VerificationRow verification = verificationDao.singleByVerificationHash(verificationHash)
+                .filter(row -> !row.isExpired() && Instant.now().minusSeconds(EXPIRATION_SEC).isBefore(row.getCreatedAt()))
+                .orElseThrow(DataNotFoundException::new);
+
+        userDao.singleByEmail(email)
+                .map(user -> {
+                    user.setPasswordHash(generatePasswordHash(password));
+                    userDao.update(user);
+                    verification.setExpired(true);
+                    verificationDao.update(verification);
+                    return user;
+                }).orElseThrow(DataNotFoundException::new);
     }
 
     @Transactional

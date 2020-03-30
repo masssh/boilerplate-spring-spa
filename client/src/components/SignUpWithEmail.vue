@@ -47,11 +47,16 @@ export default {
     }
   },
   methods: {
-    signUp() {
+    async signUp() {
       const { userName, email, password } = this
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('signUp', {
+        await this.$store.dispatch('signUp', {
           userName: userName,
+          email: email,
+          password: password,
+          router: this.$router
+        })
+        await this.$store.dispatch('login', {
           email: email,
           password: password,
           router: this.$router

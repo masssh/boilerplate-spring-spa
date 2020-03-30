@@ -16,7 +16,7 @@ public class VerificationRow implements Serializable {
     private String verificationHash;
     private long userId;
     private VerificationType verificationType;
-    private Instant expiresAt;
+    private boolean expired;
     private Instant createdAt;
     private Instant updatedAt;
 }

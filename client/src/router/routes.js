@@ -16,7 +16,7 @@ const routes = [
         }
       },
       {
-        path: 'signIn',
+        path: 'login',
         name: 'Sign In',
         component: () => import('pages/SignIn.vue'),
         meta: {
@@ -27,6 +27,22 @@ const routes = [
         path: 'signUp',
         name: 'Sign Up',
         component: () => import('pages/SignUp.vue'),
+        meta: {
+          public: true
+        }
+      },
+      {
+        path: 'password/reset',
+        name: 'Reset Password',
+        component: () => import('pages/ResetPassword.vue'),
+        meta: {
+          public: true
+        }
+      },
+      {
+        path: 'password/forgot',
+        name: 'Forgot Password',
+        component: () => import('pages/ForgotPassword.vue'),
         meta: {
           public: true
         }

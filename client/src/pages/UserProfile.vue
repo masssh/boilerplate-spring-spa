@@ -8,7 +8,7 @@
             <q-list>
               <q-item>
                 <q-item-section>Email</q-item-section>
-                <q-item-section>{{ originalEmail }}</q-item-section>
+                <q-item-section>{{ email }}</q-item-section>
               </q-item>
             </q-list>
 
@@ -17,15 +17,7 @@
             <q-list>
               <q-item>
                 <q-item-section>User Name</q-item-section>
-                <q-item-section>{{ originalUserName }}</q-item-section>
-                <q-popup-edit
-                  v-model="userName"
-                  title="Edit the Name"
-                  label-set="Update"
-                  buttons
-                >
-                  <q-input v-model="userName" label="* User Name" />
-                </q-popup-edit>
+                <q-item-section>{{ userName }}</q-item-section>
               </q-item>
               <q-item>
                 <q-item-section></q-item-section>
@@ -87,16 +79,14 @@
 import { mapState } from 'vuex'
 export default {
   computed: mapState({
-    originalUserName: (state) => state.user.userName,
-    originalEmail: (state) => state.user.email
+    userName: (state) => state.user.userName,
+    email: (state) => state.user.email
   }),
   data() {
-    return {
-      userName: null
-    }
+    return {}
   },
-  created: function() {
-    this.userName = this.originalUserName
+  created: async function() {
+    await this.$store.dispatch('getUser')
   },
   methods: {
     deleteUser() {

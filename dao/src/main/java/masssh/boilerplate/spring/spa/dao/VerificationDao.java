@@ -17,13 +17,13 @@ public interface VerificationDao {
     @Select("SELECT * FROM verification WHERE userId = #{userId}")
     Optional<VerificationRow> singleByUserId(@Param("userId") long userId);
 
-    @Insert("INSERT INTO verification (verificationHash, userId, verificationType, expiresAt, createdAt, updatedAt)" +
-            "VALUES ( #{verificationHash}, #{userId}, #{verificationType}, #{expiresAt}, #{createdAt}, #{updatedAt} )")
+    @Insert("INSERT INTO verification (verificationHash, userId, verificationType, expired, createdAt, updatedAt)" +
+            "VALUES ( #{verificationHash}, #{userId}, #{verificationType}, #{expired}, #{createdAt}, #{updatedAt} )")
     @SelectKey(statement = "SELECT @@IDENTITY", keyProperty = "verificationId", before = false, resultType = long.class)
     void create(VerificationRow verificationRow) throws SQLIntegrityConstraintViolationException;
 
-    @Update("UPDATE verification SET verificationType=#{verificationType}, expiresAt=#{expiresAt}, updatedAt=#{updatedAt} WHERE verificationId = #{verificationId}")
-    void update(VerificationRow verificationRow) throws SQLIntegrityConstraintViolationException;
+    @Update("UPDATE verification SET verificationType=#{verificationType}, expired=#{expired}, updatedAt=#{updatedAt} WHERE verificationId = #{verificationId}")
+    void update(VerificationRow verificationRow);
 
     @Delete("DELETE FROM verification WHERE verificationId = #{verificationId}")
     boolean delete(@Param("verificationId") long verificationId);

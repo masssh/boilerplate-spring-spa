@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.Instant;
 import java.util.Optional;
 
 @Component
@@ -17,14 +16,14 @@ public class VerificationCreator {
     private final VerificationDao verificationDao;
 
     @Transactional
-    public VerificationRow tryCreate(final long userId, final VerificationType verificationType, final Instant expiresAt)
+    public VerificationRow tryCreate(final long userId, final VerificationType verificationType)
             throws SQLIntegrityConstraintViolationException {
         for (int i = 0; i < 10; i++) {
             final String verificationHash = RandomService.randomAlphaNumeric(30);
             synchronized (this) {
                 final Optional<VerificationRow> rowOptional = verificationDao.singleByVerificationHash(verificationHash);
                 if (rowOptional.isEmpty()) {
-                    final VerificationRow row = new VerificationRow(0L, verificationHash, userId, verificationType, expiresAt, null, null);
+                    final VerificationRow row = new VerificationRow(0L, verificationHash, userId, verificationType, false, null, null);
                     verificationDao.create(row);
                     return row;
                 }
